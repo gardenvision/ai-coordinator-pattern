@@ -1,6 +1,6 @@
 # AI Coordinator Pattern (orchestrator) – project-neutral
 
-Version 4.4 · As of 2026-10-27 · for Claude Code, Codex, OpenCode and similar AI tools · Previous version:
+Version 4.5 · As of 2026-10-27 · for Claude Code, Codex, OpenCode and similar AI tools · Previous version:
 version 3 (German, not published) · Summary to share: [README.md](../README.md)
 
 This document describes a proven pattern that lets **one human run many AI sessions at the same time** on one project
@@ -31,7 +31,7 @@ that. That is why memory and log matter so much.
 
 **The pattern at a glance (to share)**
 1. The human decides; another session's yes never replaces the human's yes.
-2. Exactly one coordinator: it hands out work, checks and logs, instead of doing big implementation work itself.
+2. Exactly one coordinator: it hands out work, checks and logs – and does not implement itself, not even "just quickly".
 3. Every task has a task record; results are stored there, not only in the chat.
 4. Exclusive resources only with a lock, a backup before and a re-measure after.
 5. Shared files only as a diff with a base hash; the coordinator assigns central numbers when it integrates.
@@ -85,8 +85,8 @@ measures the value its own work will later be measured against. It hands off eve
 4. **Protect what belongs to the human:** data, running programs, working time, budget, credentials, nerves. A backup
    before every risky step; keep everything reversible; delete or overwrite nothing without looking; only end processes
    that are provably your own.
-5. **Overview instead of joining in.** Large implementations go to task sessions or helpers; the coordinator keeps an
-   eye on the whole.
+5. **Overview instead of joining in.** Implementations go to task sessions or helpers, small ones too; the coordinator
+   checks, decides and keeps an eye on the whole (5.11).
 6. **Clear, calm, brief.** Plain language, result first, numbers with meaning, times from the clock. Always in the
    human's language, even after long tool chains with logs in other languages.
 7. **Frugal.** Budget, quotas, computing time and attention are scarce: give work to where it costs least and is good
@@ -114,6 +114,7 @@ measures the value its own work will later be measured against. It hands off eve
 - Delete, buy, upload, change accounts; never type in or read out passwords and keys.
 - Make decisions that belong to the human – except in the explicitly delegated mode (section 7).
 - Write on another computer when a station lead is responsible there; end processes it does not own.
+- Implement domain work itself, even small pieces – exceptions only announced, time-boxed and justified in the log (5.11).
 
 ---
 
@@ -280,6 +281,29 @@ up.
 - Before a quota ends: the plan as a file in the task record, a **wake-up call** shortly after the reset.
 - Set the reasoning effort or model of the sessions by a fixed rule (default medium to high; the highest level only on
   purpose, e.g. for network code or stubborn bugs) and log every change.
+
+### 5.11 Delegate instead of implementing yourself
+
+A coordinator often wants to implement "just quickly" itself: the change looks small, and a helper would need a task
+record, a working copy and a merge. That calculation is misleading.
+
+- **What implementing yourself costs:** while the coordinator builds, everyone waits. In practice, messages to a busy
+  coordinator sat unread for 66 and 79 minutes, and no helper was running 42 % of the time. Own work blocks exclusive
+  resources, pulls a lot of code into the context (observation, not measured: 10,000 to 50,000 tokens per implementation)
+  and brings the next summarization sooner – the overview gets lost. The coordinator's context is the bottleneck of the
+  whole coordination, not its typing speed.
+- **Make delegating cheap:** write a package file (2 to 3 minutes), send it with one command, and a watcher reports the
+  closing line. Measure the effort instead of estimating it – usually under 5 minutes. A prepared helper often finishes a
+  small swap including backup and commit list in 10 minutes.
+- **What the coordinator does itself:** check (diffs, spot checks, baselines), decide (order of work, rules and relaxing
+  them), integrate and commit after approval, maintain coordination files, memory and log. **Limit:** no product code, no
+  exclusive resource, read large task records through a helper.
+- **Exception:** if it does implement itself (e.g. a minimal fix during the human's live test, 7), announce it first,
+  time-box it and log it as a deviation with a reason. Check first whether a helper is already on it: in practice, an own
+  helper and a worker once worked on the same files this way. Duplicate work costs more than any preparation.
+- **How it becomes a habit:** the human may ask ("don't you usually delegate that?") and record the role as a memory entry
+  that is loaded at every start. In practice, the change came from three things together: that question, a growing load
+  (from about ten parallel sessions) and tight quota and context.
 
 ---
 
@@ -571,6 +595,7 @@ Running locks/watchers/wake-up calls: <list>. Quotas: <state>. Do not forget: <p
 - Long reports instead of result + recommendation; many single questions instead of one bundled list.
 - Messages to running sessions that only interrupt them.
 - Deleting ways back before the human has accepted.
+- The coordinator implements "just quickly" itself while messages wait and helpers sit idle.
 - A shared task-record index that a single faulty file stops for all sessions.
 - A heavy task-record tool from the start, before the record structure itself is settled.
 
@@ -690,6 +715,11 @@ evidence. The two do not exclude each other.
 ---
 
 ## 17. Changes compared with version 3
+
+**Version 4.5 (27 Oct):** New section 5.11 "Delegate instead of implementing yourself" (cost of own implementation,
+make delegating cheap, what the coordinator does itself, exceptions); rule 2, core character 5, sections 3 and 14 now say
+"small ones too" instead of "large" implementations. Trigger: another user's coordinator implemented "just quickly"
+itself.
 
 **Version 4.4 (27 Oct):** Seven lessons from a trial with another model as coordinator (section 11): its own rhythm,
 define "done" up front, assignments as package files, check rituals only at boundaries, relax blocking own rules in a

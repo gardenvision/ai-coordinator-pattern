@@ -4,7 +4,7 @@
 
 **English** · [Deutsch](README.de.md)
 
-Version 1 · As of 2026-10-21 · Summary of [AI-Coordinator-Pattern.md](en/AI-Coordinator-Pattern.md) (version 4.4) · for sharing
+Version 1 · As of 2026-10-21 · Summary of [AI-Coordinator-Pattern.md](en/AI-Coordinator-Pattern.md) (version 4.5) · for sharing
 
 **What it is about:** One human lets many AI sessions work on one project at the same time. One of them is the
 **coordinator**. It hands out the work, assigns scarce resources, has results checked independently, keeps a log and
@@ -38,7 +38,7 @@ As soon as several AI sessions run in parallel, the same things happen again and
                                 own copy)         computer)          review, research)
 ```
 
-The coordinator builds little itself. It keeps the overview, sets the order of work and checks the results.
+The coordinator does not build things itself. It keeps the overview, sets the order of work and checks the results.
 
 ---
 
@@ -46,8 +46,10 @@ The coordinator builds little itself. It keeps the overview, sets the order of w
 
 1. **The human decides.** The yes of another session never replaces the human's yes – not even the coordinator's yes.
    *Why:* Otherwise sessions pass on approvals that the human never gave.
-2. **Exactly one coordinator.** It hands out work, checks and keeps the log instead of building a lot itself.
-   *Why:* Two bosses give out numbers and resources twice. Whoever builds loses the overview.
+2. **Exactly one coordinator.** It hands out work, checks and keeps the log – and does not build things itself, not even
+   "just quickly".
+   *Why:* Two bosses give out numbers and resources twice. Whoever builds lets messages and helpers wait and loses the
+   overview.
 3. **Every task has a task record.** Goal, status, evidence and handoff live in one folder, not only in the chat.
    *Why:* Messages between sessions get lost; the task record stays. A new session continues from there.
 4. **Exclusive resources only with a lock** – back up before, re-measure after (with checksums).

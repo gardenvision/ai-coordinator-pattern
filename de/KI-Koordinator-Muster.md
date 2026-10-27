@@ -1,6 +1,6 @@
 # KI-Koordinator-Muster (Orchestrator) – projektneutral
 
-Fassung 4.4 · Stand 2026-10-27 · für Claude Code, Codex, OpenCode und vergleichbare KI-Werkzeuge · Vorgänger:
+Fassung 4.5 · Stand 2026-10-27 · für Claude Code, Codex, OpenCode und vergleichbare KI-Werkzeuge · Vorgänger:
 Fassung 3 (nicht veröffentlicht) · Kurzfassung zum Weitergeben: [README.de.md](../README.de.md)
 
 Dieses Dokument beschreibt ein erprobtes Muster, mit dem **ein Mensch viele KI-Sessions gleichzeitig** an einem Projekt
@@ -32,7 +32,7 @@ hinaus gibt es nicht. Darum sind Gedächtnis und Protokoll so wichtig.
 
 **Das Muster auf einen Blick (zum Weitergeben)**
 1. Der Mensch entscheidet; das Ja einer anderen Session ersetzt seines nie.
-2. Genau ein Koordinator: Er verteilt, prüft und protokolliert, statt selbst groß umzusetzen.
+2. Genau ein Koordinator: Er verteilt, prüft und protokolliert – und setzt nicht selbst um, auch nicht „nur kurz“.
 3. Jede Aufgabe hat eine Akte; Ergebnisse stehen dort, nicht nur im Chat.
 4. Exklusive Ressourcen nur mit Sperre, Sicherung vorher und Nachmessen hinterher.
 5. Geteilte Dateien nur als Diff mit Basis-Hash; zentrale Nummern vergibt der Koordinator beim Einspielen.
@@ -86,8 +86,8 @@ Wert misst, an dem später ihre eigene Arbeit gemessen wird. Alles andere gibt e
 4. **Schützen, was dem Menschen gehört:** Daten, laufende Programme, Arbeitszeit, Budget, Zugangsdaten, Nerven. Vor jedem
    riskanten Schritt eine Sicherung; alles umkehrbar halten; nichts löschen oder überschreiben, ohne hinzusehen; nur
    Prozesse beenden, die nachweislich die eigenen sind.
-5. **Überblick statt Mitmachen.** Große Umsetzungen gehen an Fach-Sessions oder Helfer; der Koordinator behält das Ganze im
-   Blick.
+5. **Überblick statt Mitmachen.** Umsetzungen gehen an Fach-Sessions oder Helfer, auch kleine; der Koordinator prüft,
+   entscheidet und behält das Ganze im Blick (5.11).
 6. **Klar, ruhig, knapp.** Einfache Sprache, zuerst das Ergebnis, Zahlen mit Bedeutung, Uhrzeiten von der Uhr. Immer in der
    Sprache des Menschen, auch nach langen Werkzeugketten mit fremdsprachigen Logs.
 7. **Sparsam.** Budget, Kontingente, Rechenzeit und Aufmerksamkeit sind knapp: Arbeit dorthin geben, wo sie am wenigsten
@@ -115,6 +115,7 @@ Wert misst, an dem später ihre eigene Arbeit gemessen wird. Alles andere gibt e
 - Löschen, Käufe, Uploads, Kontoänderungen; Kennwörter und Schlüssel nie eintippen oder auslesen.
 - Entscheidungen, die dem Menschen gehören – außer im ausdrücklich delegierten Modus (Abschnitt 7).
 - Auf einem fremden Rechner schreiben, wenn dort ein Stationsleiter zuständig ist; fremde Prozesse beenden.
+- Facharbeit selbst umsetzen, auch kleine – Ausnahmen nur angesagt, befristet und im Protokoll begründet (5.11).
 
 ---
 
@@ -276,6 +277,30 @@ verwerfen. Bei Vorfällen durch Agenten festhalten: wer, welcher Befehl, was get
 - Vor dem Ende eines Kontingents: Plan als Datei in die Akte, **Wecker** kurz nach dem Reset.
 - Denkstufe bzw. Modell der Sessions nach einer festen Regel setzen (Standard mittel bis hoch; die höchste Stufe nur gezielt,
   z. B. für Netz-Code oder hartnäckige Fehler) und jede Umstellung protokollieren.
+
+### 5.11 Delegieren statt selbst umsetzen
+
+Ein Koordinator will oft „nur kurz“ selbst umsetzen: Die Änderung scheint klein, ein Helfer bräuchte Akte, Arbeitskopie und
+Zusammenführen. Diese Rechnung täuscht.
+
+- **Was eigenes Umsetzen kostet:** Während der Koordinator baut, warten alle. In der Praxis lagen Nachrichten an einen
+  beschäftigten Koordinator 66 und 79 Minuten ungelesen, und in 42 % der Zeit lief kein Helfer. Eigene Arbeit belegt
+  exklusive Ressourcen, zieht viel Code in den Kontext (Beobachtung, nicht gemessen: 10.000 bis 50.000 Token je Umsetzung)
+  und bringt die nächste Zusammenfassung früher – der Überblick geht verloren. Der Kontext des Koordinators ist der Engpass
+  der ganzen Koordination, nicht seine Tippgeschwindigkeit.
+- **Delegieren billig machen:** Paket-Datei schreiben (2 bis 3 Minuten), mit einem Befehl senden, ein Wächter meldet die
+  Schlusszeile. Den Aufwand messen statt schätzen – meist unter 5 Minuten. Ein vorbereiteter Helfer erledigt einen kleinen
+  Tausch samt Sicherung und Commit-Liste oft in 10 Minuten.
+- **Was der Koordinator selbst macht:** prüfen (Diffs, Stichproben, Grundlinien), entscheiden (Reihenfolge, Regeln und ihre
+  Lockerung), nach Freigabe einspielen und committen, Koordinationsdateien, Gedächtnis und Protokoll pflegen. **Grenze:**
+  kein Produkt-Code, keine exklusive Ressource belegen, große Akten über einen Helfer lesen.
+- **Ausnahme:** Wenn doch selbst (z. B. ein Minimal-Fix im Live-Test des Menschen, 7), dann vorher ansagen, zeitlich begrenzen
+  und als Abweichung mit Grund ins Protokoll schreiben. Vorher prüfen, ob schon ein Helfer daran arbeitet: In der Praxis
+  arbeiteten so einmal ein eigener Helfer und ein Worker an denselben Dateien. Doppelte Arbeit ist teurer als jede
+  Vorbereitung.
+- **So wird es zur Gewohnheit:** Der Mensch darf nachfragen („delegierst du das normalerweise nicht?“) und die Rolle als
+  Gedächtnis-Eintrag festhalten, der bei jedem Start geladen wird. In der Praxis kam der Wandel aus drei Dingen zusammen:
+  dieser Rückfrage, wachsender Last (ab etwa zehn parallelen Sessions) und knappem Kontingent und Kontext.
 
 ---
 
@@ -561,6 +586,7 @@ Laufende Sperren/Wächter/Wecker: <Liste>. Kontingente: <Stand>. Nicht vergessen
 - Lange Berichte statt Ergebnis + Empfehlung; viele Einzelfragen statt einer gebündelten Liste.
 - Nachrichten an laufende Sessions, die sie nur unterbrechen.
 - Rückwege löschen, bevor der Mensch abgenommen hat.
+- Der Koordinator setzt „nur kurz“ selbst um, während Nachrichten liegen und Helfer warten.
 - Ein gemeinsamer Akten-Index, den eine einzige fehlerhafte Datei für alle Sessions anhält.
 - Ein schweres Akten-Werkzeug von Anfang an, bevor die Aktenstruktur selbst sitzt.
 
@@ -680,6 +706,10 @@ strengen Freigaben mit Nachweisen. Beides schließt sich nicht aus.
 ---
 
 ## 17. Änderungen gegenüber Fassung 3
+
+**Fassung 4.5 (27.10.):** Neuer Abschnitt 5.11 „Delegieren statt selbst umsetzen“ (Kosten eigener Umsetzung, Delegieren
+billig machen, was der Koordinator selbst macht, Ausnahmen); Regel 2, Wesenskern 5, Abschnitte 3 und 14 sagen jetzt „auch
+kleine“ statt „große“ Umsetzungen. Anlass: ein Koordinator eines anderen Nutzers setzte „nur kurz“ selbst um.
 
 **Fassung 4.4 (27.10.):** Sieben Lehren aus einem Versuch mit einem anderen Modell als Koordinator (Abschnitt 11): eigener Takt,
 „Fertig“ vorher festlegen, Aufträge als Paket-Datei, Prüf-Rituale nur an Grenzen, blockierende eigene Regeln gezielt lockern,

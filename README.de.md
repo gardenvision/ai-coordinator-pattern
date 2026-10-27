@@ -4,7 +4,7 @@
 
 [English](README.md) · **Deutsch**
 
-Fassung 1 · Stand 2026-10-21 · Kurzfassung zu [KI-Koordinator-Muster.md](de/KI-Koordinator-Muster.md) (Fassung 4.4) · zum Weitergeben
+Fassung 1 · Stand 2026-10-21 · Kurzfassung zu [KI-Koordinator-Muster.md](de/KI-Koordinator-Muster.md) (Fassung 4.5) · zum Weitergeben
 
 **Worum es geht:** Ein Mensch lässt viele KI-Sessions gleichzeitig an einem Projekt arbeiten. Eine davon ist der
 **Koordinator**. Sie verteilt die Arbeit, vergibt knappe Ressourcen, lässt Ergebnisse unabhängig prüfen, führt Protokoll
@@ -38,7 +38,7 @@ Sobald mehrere KI-Sessions parallel laufen, passiert immer wieder dasselbe:
                                 eigene Kopie)     Rechner)           Review, Recherche)
 ```
 
-Der Koordinator setzt selbst wenig um. Er hält den Überblick, vergibt Reihenfolgen und prüft nach.
+Der Koordinator setzt selbst nichts um. Er hält den Überblick, vergibt Reihenfolgen und prüft nach.
 
 ---
 
@@ -46,8 +46,9 @@ Der Koordinator setzt selbst wenig um. Er hält den Überblick, vergibt Reihenfo
 
 1. **Der Mensch entscheidet.** Das Ja einer anderen Session ersetzt seines nie – auch nicht das Ja des Koordinators.
    *Warum:* Sonst reichen sich Sessions Freigaben weiter, die der Mensch nie gegeben hat.
-2. **Genau ein Koordinator.** Er verteilt, prüft und protokolliert, statt selbst groß umzusetzen.
-   *Warum:* Zwei Chefs vergeben Nummern und Ressourcen doppelt. Wer selbst baut, verliert den Überblick.
+2. **Genau ein Koordinator.** Er verteilt, prüft und protokolliert – und setzt nicht selbst um, auch nicht „nur kurz“.
+   *Warum:* Zwei Chefs vergeben Nummern und Ressourcen doppelt. Wer selbst baut, lässt Nachrichten und Helfer warten und
+   verliert den Überblick.
 3. **Jede Aufgabe hat eine Akte.** Ziel, Stand, Nachweise und Übergabe stehen in einem Ordner, nicht nur im Chat.
    *Warum:* Nachrichten zwischen Sessions gehen verloren; die Akte bleibt. Eine neue Session macht dort weiter.
 4. **Exklusive Ressourcen nur mit Sperre** – vorher sichern, hinterher nachmessen (mit Prüfsummen).
