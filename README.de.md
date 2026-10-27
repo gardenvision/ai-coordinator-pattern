@@ -4,7 +4,7 @@
 
 [English](README.md) · **Deutsch**
 
-Fassung 1 · Stand 2026-10-21 · Kurzfassung zu [KI-Koordinator-Muster.md](de/KI-Koordinator-Muster.md) (Fassung 4.3) · zum Weitergeben
+Fassung 1 · Stand 2026-10-21 · Kurzfassung zu [KI-Koordinator-Muster.md](de/KI-Koordinator-Muster.md) (Fassung 4.4) · zum Weitergeben
 
 **Worum es geht:** Ein Mensch lässt viele KI-Sessions gleichzeitig an einem Projekt arbeiten. Eine davon ist der
 **Koordinator**. Sie verteilt die Arbeit, vergibt knappe Ressourcen, lässt Ergebnisse unabhängig prüfen, führt Protokoll

@@ -1,6 +1,6 @@
 # KI-Koordinator-Muster (Orchestrator) – projektneutral
 
-Fassung 4.3 · Stand 2026-10-21 · für Claude Code, Codex, OpenCode und vergleichbare KI-Werkzeuge · Vorgänger:
+Fassung 4.4 · Stand 2026-10-27 · für Claude Code, Codex, OpenCode und vergleichbare KI-Werkzeuge · Vorgänger:
 Fassung 3 (nicht veröffentlicht) · Kurzfassung zum Weitergeben: [README.de.md](../README.de.md)
 
 Dieses Dokument beschreibt ein erprobtes Muster, mit dem **ein Mensch viele KI-Sessions gleichzeitig** an einem Projekt
@@ -286,7 +286,7 @@ verwerfen. Bei Vorfällen durch Agenten festhalten: wer, welcher Befehl, was get
 - **Entscheidungen bündeln:** nummerierte Liste, je Punkt Optionen und **eine** Empfehlung. Antwort mit Kürzeln oder
   „alles nach Empfehlung“ muss möglich sein. Ohne Antwort gilt die Empfehlung, wenn sie umkehrbar ist (und das wird dazugesagt).
 - **Bilder zum Vergleich:** alt und neu nebeneinander, dazu das Vorbild des Menschen auf demselben Bogen.
-- **Kosten in der Einheit, die der Mensch spürt** (z. B. Bilder pro Sekunde statt Millisekunden, Euro statt Token), mit
+- **Kosten in der Einheit, die der Mensch spürt** (z. B. spürbare Wartezeit statt Millisekunden, Euro statt Token), mit
   Ausgangslage und Messort.
 - Nicht dringende Fragen als Text, nicht als blockierender Dialog, damit die Koordination weiterläuft.
 - Was der Mensch selbst tun soll: Schritt für Schritt, auf welchem Rechner, welcher Knopf.
@@ -396,7 +396,7 @@ verwerfen. Bei Vorfällen durch Agenten festhalten: wer, welcher Befehl, was get
 
 ---
 
-## 10. Große Umstellungen (z. B. Engine-, Framework- oder Datenbank-Upgrade)
+## 10. Große Umstellungen (z. B. Plattform-, Framework- oder Datenbank-Upgrade)
 
 1. **Einfrieren:** Markierung (Tag) auf dem letzten guten Stand; beide Rechner synchron.
 2. **Grundlinie messen:** feste Messpunkte (Bilder, Antwortzeiten, Testergebnisse) im alten Stand, maschinenlesbar.
@@ -435,6 +435,20 @@ verwerfen. Bei Vorfällen durch Agenten festhalten: wer, welcher Befehl, was get
 - Varianten mit Bildern, kurzer Vorbild-Recherche und einer klaren Empfehlung vorlegen; Kombinationen anbieten, wenn sie
   sauber zusammenpassen.
 - Erst dokumentieren, dann die nächste Phase; Werkzeuge allgemein bauen, nicht nur für den einen Fall.
+- **Ein Modell ohne eigenen Takt taugt schlecht als Koordinator.** Ein Assistent, der nur auf Nachrichten reagiert, lässt Helfer
+  stundenlang warten; Nachrichten an ihn liegen, bis sein laufender Zug endet. Der Koordinator braucht Wächter (Hintergrund-Schleifen,
+  die auf eine Schlusszeile im Bericht warten) und kurze Züge. Assistenten ohne Takt nur als Ausführende einsetzen.
+- **„Fertig“ vorher festlegen:** im Produkt, getestet, Commit-Liste. Ohne diese Definition gelten Offline-Kandidaten und Prüfprotokolle als
+  Abschluss, und nichts erreicht das Produkt.
+- **Aufträge als Paket-Datei** mit Ziel, Zielzeit, erlaubten Ausgaben, „Fertig heißt“ und einer festen Schlusszeile (FERTIG/HALT mit Grund).
+  Ein HALT ist erwünscht, kein Fehler. Fertig-Kriterien eng fassen, sonst stoppen gute Helfer an Nebensachen.
+- **Prüf-Rituale an Grenzen, nicht an jedem Schritt:** Prüfsummen, Manifeste und Sicherungen bei Fenster, Übergabe und Archiv; sonst
+  frisst die Buchführung die Arbeitszeit (gemessen: ein Drittel aller Befehle).
+- **Eigene Regeln, die blockieren, gezielt lockern – der Schutz bleibt:** bekannte harmlose Fälle ausnehmen und am Ende nachweisen, dass
+  nichts geschrieben wurde.
+- **Nur-Lese-Prüfungen parallel:** mehrere unabhängige Prüfaufträge (Netzvertrag, Leistung, Speicher, Speicherplatz, Doku) im Hintergrund,
+  dann Stichprobe durch den Koordinator und Zweitprüfung durch ein anderes Modell. So werden Funde belastbar.
+- **Nach dem Senden prüfen, ob der Helfer den Auftrag aufgenommen hat**; still liegende Warteschlangen früh dem Menschen melden.
 
 ---
 
@@ -667,6 +681,10 @@ strengen Freigaben mit Nachweisen. Beides schließt sich nicht aus.
 
 ## 17. Änderungen gegenüber Fassung 3
 
+**Fassung 4.4 (27.10.):** Sieben Lehren aus einem Versuch mit einem anderen Modell als Koordinator (Abschnitt 11): eigener Takt,
+„Fertig“ vorher festlegen, Aufträge als Paket-Datei, Prüf-Rituale nur an Grenzen, blockierende eigene Regeln gezielt lockern,
+Nur-Lese-Prüfungen parallel, Aufnahme des Auftrags prüfen.
+
 **Fassung 4.3 (21.10. abends):** Abschnitt 9 um „Werkzeuge ohne Nachrichten zwischen Sessions“ ergänzt (aus dem
 Manifest Fassung 2, Abschnitt „Einsatz in Codex“, mit den Erfahrungen seitdem); das Manifest ist damit historisch. Die Herkunft heißt
 überall nur noch „privates Projekt“; das Beispiel-Dokument bleibt intern und wird nicht veröffentlicht.
@@ -713,7 +731,7 @@ Prüfnachweis in [Pruefnachweis-Abschnitt-16.md](Pruefnachweis-Abschnitt-16.md).
   kostet mehr als Warten.
 - Überraschend gute Werte zuerst am Ergebnis prüfen (2) – ein „schneller“ Messwert kam daher, dass gar nichts gezeichnet
   wurde.
-- Kosten in der Einheit, die der Mensch spürt (6) – Millisekunden sagten ihm nichts, Bilder pro Sekunde schon.
+- Kosten in der Einheit, die der Mensch spürt (6) – Millisekunden sagten ihm nichts, spürbare Wartezeit schon.
 - Gedächtnis selbst versionieren (8) – es ist das wertvollste Gut, und mehrere Sessions schreiben hinein.
 - Rohberichte mit anderer Endung (8) – Berichte ohne Pflichtkopf brachen den Index für alle Sessions.
 - Rechte fremder Werkzeuge technisch begrenzen, außerhalb des Projekts nachprüfen, Eingangsdaten selbst bereitlegen (9) –

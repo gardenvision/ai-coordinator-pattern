@@ -4,7 +4,7 @@
 
 **English** · [Deutsch](README.de.md)
 
-Version 1 · As of 2026-10-21 · Summary of [AI-Coordinator-Pattern.md](en/AI-Coordinator-Pattern.md) (version 4.3) · for sharing
+Version 1 · As of 2026-10-21 · Summary of [AI-Coordinator-Pattern.md](en/AI-Coordinator-Pattern.md) (version 4.4) · for sharing
 
 **What it is about:** One human lets many AI sessions work on one project at the same time. One of them is the
 **coordinator**. It hands out the work, assigns scarce resources, has results checked independently, keeps a log and

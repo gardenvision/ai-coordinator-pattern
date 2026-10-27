@@ -1,6 +1,6 @@
 # AI Coordinator Pattern (orchestrator) – project-neutral
 
-Version 4.3 · As of 2026-10-21 · for Claude Code, Codex, OpenCode and similar AI tools · Previous version:
+Version 4.4 · As of 2026-10-27 · for Claude Code, Codex, OpenCode and similar AI tools · Previous version:
 version 3 (German, not published) · Summary to share: [README.md](../README.md)
 
 This document describes a proven pattern that lets **one human run many AI sessions at the same time** on one project
@@ -291,7 +291,7 @@ up.
   answer with short codes or "all as recommended". Without an answer the recommendation applies if it is reversible (and
   this is said).
 - **Images for comparison:** old and new side by side, plus the human's reference on the same comparison sheet.
-- **Costs in the unit the human feels** (e.g. frames per second instead of milliseconds, euros instead of tokens), with
+- **Costs in the unit the human feels** (e.g. noticeable waiting time instead of milliseconds, euros instead of tokens), with
   the starting point and the place of measurement.
 - Non-urgent questions as text, not as a blocking dialog, so coordination keeps running.
 - What the human should do themselves: step by step, on which computer, which button.
@@ -401,7 +401,7 @@ up.
 
 ---
 
-## 10. Large migrations (e.g. engine, framework or database upgrade)
+## 10. Large migrations (e.g. platform, framework or database upgrade)
 
 1. **Freeze:** a marker (tag) on the last good state; both computers in sync.
 2. **Measure the baseline:** fixed measuring points (images, response times, test results) in the old state,
@@ -444,6 +444,21 @@ up.
 - Present variants with images, short reference research and one clear recommendation; offer combinations when they fit
   together cleanly.
 - Document first, then the next phase; build tools in a general way, not only for the one case.
+- **A model without its own rhythm makes a poor coordinator.** An assistant that only reacts to messages leaves helpers
+  waiting for hours; messages to it sit until its current turn ends. The coordinator needs watchers (background loops that
+  wait for a closing line in the report) and short turns. Use assistants without their own rhythm only as executors.
+- **Define "done" up front:** in the product, tested, commit list. Without this definition, offline candidates and check logs
+  count as finished, and nothing reaches the product.
+- **Assignments as a package file** with goal, target time, allowed outputs, "done means" and a fixed closing line (DONE/HALT
+  with reason). A HALT is welcome, not a failure. Keep the done criteria narrow, otherwise good helpers stop at side issues.
+- **Check rituals at boundaries, not at every step:** checksums, manifests and backups at windows, handoffs and archiving;
+  otherwise the bookkeeping eats the working time (measured: a third of all commands).
+- **Relax own rules that block, in a targeted way – the protection stays:** exempt known harmless cases and prove at the end
+  that nothing was written.
+- **Read-only checks in parallel:** several independent check jobs (network contract, performance, save data, disk space,
+  docs) in the background, then a spot check by the coordinator and a second check by another model. This makes findings
+  reliable.
+- **After sending, check that the helper has picked up the task**; report silent queues to the human early.
 
 ---
 
@@ -676,6 +691,10 @@ evidence. The two do not exclude each other.
 
 ## 17. Changes compared with version 3
 
+**Version 4.4 (27 Oct):** Seven lessons from a trial with another model as coordinator (section 11): its own rhythm,
+define "done" up front, assignments as package files, check rituals only at boundaries, relax blocking own rules in a
+targeted way, read-only checks in parallel, check that the task was picked up.
+
 **Version 4.3 (21 Oct, evening):** Section 9 gets "Tools without messages between sessions" (from the manifest,
 version 2, section "Use in Codex", with the experience since then); the manifest is now historical. The origin is now only
 called "a private project"; the example document stays internal and is not published.
@@ -721,7 +740,7 @@ threads only as a wish). Check evidence in [Source-Check-Section-16.md](Source-C
 - No exclusive window shortly before a quota ends, wake-up call after the reset (5.1, 5.10) – an abort with a held lock
   costs more than waiting.
 - Check surprisingly good values on the result first (2) – a "fast" measurement came from nothing being drawn at all.
-- Costs in the unit the human feels (6) – milliseconds meant nothing to them, frames per second did.
+- Costs in the unit the human feels (6) – milliseconds meant nothing to them, noticeable waiting time did.
 - Version the memory itself (8) – it is the most valuable asset, and several sessions write into it.
 - Raw reports with a different extension (8) – reports without the required header broke the index for all sessions.
 - Limit the permissions of outside tools technically, check outside the project, provide input data yourself (9) –
