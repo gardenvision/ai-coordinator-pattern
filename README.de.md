@@ -4,7 +4,7 @@
 
 [English](README.md) · **Deutsch**
 
-Fassung 1 · Stand 2026-10-21 · Kurzfassung zu [KI-Koordinator-Muster.md](de/KI-Koordinator-Muster.md) (Fassung 4.5) · zum Weitergeben
+Fassung 1 · Stand 2026-10-21 · Kurzfassung zu [KI-Koordinator-Muster.md](de/KI-Koordinator-Muster.md) (Fassung 4.6) · zum Weitergeben
 
 **Worum es geht:** Ein Mensch lässt viele KI-Sessions gleichzeitig an einem Projekt arbeiten. Eine davon ist der
 **Koordinator**. Sie verteilt die Arbeit, vergibt knappe Ressourcen, lässt Ergebnisse unabhängig prüfen, führt Protokoll
@@ -71,6 +71,9 @@ Der Koordinator setzt selbst nichts um. Er hält den Überblick, vergibt Reihenf
     *Warum:* Der Koordinator hat keinen versteckten Zustand. Was nicht aufgeschrieben ist, kennt die nächste Session nicht.
     Das Gedächtnis wird darum selbst versioniert.
 
+**Goldene Regel bei mehreren Rechnern:** Jeder Rechner mit eigener Werkbank ist ein eigener Bauplatz, nicht nur ein
+Prüfplatz – verteile die Einbauten auf alle Bauplätze ([Goldene-Regel.md](de/Goldene-Regel.md)).
+
 ---
 
 ## So läuft eine Aufgabe
@@ -113,6 +116,7 @@ Gedächtnis, Protokoll und Akten gepflegt werden – nicht durch ein besonders l
 
 ## Mehr dazu
 
+- **Goldene Regel:** [Goldene-Regel.md](de/Goldene-Regel.md) – jeder Rechner mit eigener Werkbank ist ein Bauplatz.
 - **Das ganze Muster:** [KI-Koordinator-Muster.md](de/KI-Koordinator-Muster.md) – Rollen, Routinen, Vorlagen (Start-Prompt, GO-Nachricht,
   Review- und Recherche-Auftrag, gebündelte Entscheidungsliste), typische Fehler, Vergleich mit Cloud-Angeboten.
 - **Herkunft:** Das Muster ist 2026 in einem privaten Projekt entstanden. Eine ganz normale Fach-Session schrieb dort

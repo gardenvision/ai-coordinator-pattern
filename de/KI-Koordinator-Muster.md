@@ -1,6 +1,6 @@
 # KI-Koordinator-Muster (Orchestrator) – projektneutral
 
-Fassung 4.5 · Stand 2026-10-27 · für Claude Code, Codex, OpenCode und vergleichbare KI-Werkzeuge · Vorgänger:
+Fassung 4.6 · Stand 2026-10-28 · für Claude Code, Codex, OpenCode und vergleichbare KI-Werkzeuge · Vorgänger:
 Fassung 3 (nicht veröffentlicht) · Kurzfassung zum Weitergeben: [README.de.md](../README.de.md)
 
 Dieses Dokument beschreibt ein erprobtes Muster, mit dem **ein Mensch viele KI-Sessions gleichzeitig** an einem Projekt
@@ -41,6 +41,9 @@ hinaus gibt es nicht. Darum sind Gedächtnis und Protokoll so wichtig.
 8. Versionsverwaltung, Löschen, Käufe und Uploads nur mit Ja des Menschen im ausführenden Chat.
 9. Werte erst nach Messung, Uhrzeiten von der Uhr, eigene Deutungen als Annahme.
 10. Jede Lehre geht ins Gedächtnis und als Regel an alle Sessions.
+
+**Goldene Regel bei mehreren Rechnern:** Jeder Rechner mit eigener Werkbank ist ein eigener Bauplatz, nicht nur ein
+Prüfplatz – verteile die Einbauten auf alle Bauplätze ([Goldene-Regel.md](Goldene-Regel.md)).
 
 ---
 
@@ -388,6 +391,9 @@ Zusammenführen. Diese Rechnung täuscht.
 
 ## 9. Mehrere Rechner und fremde KI-Werkzeuge
 
+- **Goldene Regel:** Jeder Rechner mit eigener Werkbank (eigener Editor bzw. eigene Laufzeit- und Testumgebung, eigene
+  Agenten) ist ein Bauplatz, nicht nur ein Prüfplatz. Begrenzt wird nur der Editor je Rechner; Einbauten verteilen, gemeinsame
+  Hauptlinie für alle ([Goldene-Regel.md](Goldene-Regel.md)).
 - **Ein Hauptsitz, eine Wahrheit.** Der Zweitrechner ist Arbeitskopie. Ergebnisse kommen als **Arbeitszweig** über ein
   gemeinsames Repository (z. B. auf einem NAS) zurück; der Zweitrechner darf nur auf seine eigenen Zweige pushen (technisch
   abgesichert). Der Koordinator holt, prüft den Diff und führt nur mit Ja des Menschen zusammen.
@@ -706,6 +712,10 @@ strengen Freigaben mit Nachweisen. Beides schließt sich nicht aus.
 ---
 
 ## 17. Änderungen gegenüber Fassung 3
+
+**Fassung 4.6 (28.10.):** Eigene Datei [Goldene-Regel.md](Goldene-Regel.md): Jeder Rechner mit eigener Werkbank ist ein
+Bauplatz, nicht nur ein Prüfplatz; begrenzt wird nur die echte exklusive Ressource; keine künstliche Grenze, die einen
+Koordinationsfehler verdeckt; alle Bauplätze auf derselben Hauptlinie. Verweise in Abschnitt 0 und 9.
 
 **Fassung 4.5 (27.10.):** Neuer Abschnitt 5.11 „Delegieren statt selbst umsetzen“ (Kosten eigener Umsetzung, Delegieren
 billig machen, was der Koordinator selbst macht, Ausnahmen); Regel 2, Wesenskern 5, Abschnitte 3 und 14 sagen jetzt „auch

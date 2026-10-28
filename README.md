@@ -4,7 +4,7 @@
 
 **English** · [Deutsch](README.de.md)
 
-Version 1 · As of 2026-10-21 · Summary of [AI-Coordinator-Pattern.md](en/AI-Coordinator-Pattern.md) (version 4.5) · for sharing
+Version 1 · As of 2026-10-21 · Summary of [AI-Coordinator-Pattern.md](en/AI-Coordinator-Pattern.md) (version 4.6) · for sharing
 
 **What it is about:** One human lets many AI sessions work on one project at the same time. One of them is the
 **coordinator**. It hands out the work, assigns scarce resources, has results checked independently, keeps a log and
@@ -74,6 +74,9 @@ The coordinator does not build things itself. It keeps the overview, sets the or
     *Why:* The coordinator has no hidden state. What is not written down, the next session does not know.
     So the memory itself is kept under version control.
 
+**Golden rule for several computers:** every computer with its own workbench is a building site of its own, not just a
+test site – spread the integration work across all building sites ([Golden-Rule.md](en/Golden-Rule.md)).
+
 ---
 
 ## How a task runs
@@ -115,6 +118,7 @@ memory, log and task records are kept up to date – not through a particularly 
 
 ## More
 
+- **Golden rule:** [Golden-Rule.md](en/Golden-Rule.md) – every computer with its own workbench is a building site.
 - **The full pattern:** [AI-Coordinator-Pattern.md](en/AI-Coordinator-Pattern.md) – roles, routines, templates (start prompt, GO message, review and
   research request, bundled decision list), typical mistakes, comparison with cloud offerings.
 - **Origin:** The pattern came about in 2026 in a private project. A perfectly ordinary task session wrote instructions for

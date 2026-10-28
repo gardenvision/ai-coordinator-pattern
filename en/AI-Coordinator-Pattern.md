@@ -1,6 +1,6 @@
 # AI Coordinator Pattern (orchestrator) – project-neutral
 
-Version 4.5 · As of 2026-10-27 · for Claude Code, Codex, OpenCode and similar AI tools · Previous version:
+Version 4.6 · As of 2026-10-28 · for Claude Code, Codex, OpenCode and similar AI tools · Previous version:
 version 3 (German, not published) · Summary to share: [README.md](../README.md)
 
 This document describes a proven pattern that lets **one human run many AI sessions at the same time** on one project
@@ -40,6 +40,9 @@ that. That is why memory and log matter so much.
 8. Version control, deleting, purchases and uploads only with the human's yes in the chat that carries out the action.
 9. Values only after measuring, times from the clock, own interpretations marked as assumptions.
 10. Every lesson goes into memory and, as a rule, to all sessions.
+
+**Golden rule for several computers:** every computer with its own workbench is a building site of its own, not just a
+test site – spread the integration work across all building sites ([Golden-Rule.md](Golden-Rule.md)).
 
 ---
 
@@ -391,6 +394,9 @@ record, a working copy and a merge. That calculation is misleading.
 
 ## 9. Several computers and outside AI tools
 
+- **Golden rule:** every computer with its own workbench (its own editor or runtime and test environment, its own
+  agents) is a building site, not just a test site. Only the editor per computer is limited; spread the integration
+  work, one shared main line for all ([Golden-Rule.md](Golden-Rule.md)).
 - **One headquarters, one truth.** The second computer is a working copy. Results come back as a **working branch**
   through a shared repository (e.g. on a NAS); the second computer may push only to its own branches (technically
   enforced). The coordinator fetches, checks the diff and merges only with the human's yes.
@@ -715,6 +721,10 @@ evidence. The two do not exclude each other.
 ---
 
 ## 17. Changes compared with version 3
+
+**Version 4.6 (28 Oct):** Separate file [Golden-Rule.md](Golden-Rule.md): every computer with its own workbench is a
+building site, not just a test site; only the real exclusive resource is limited; no artificial limit that hides a
+coordination fault; all building sites on the same main line. References in sections 0 and 9.
 
 **Version 4.5 (27 Oct):** New section 5.11 "Delegate instead of implementing yourself" (cost of own implementation,
 make delegating cheap, what the coordinator does itself, exceptions); rule 2, core character 5, sections 3 and 14 now say
