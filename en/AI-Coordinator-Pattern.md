@@ -1,6 +1,6 @@
 # AI Coordinator Pattern (orchestrator) – project-neutral
 
-Version 4.6 · As of 2026-10-28 · for Claude Code, Codex, OpenCode and similar AI tools · Previous version:
+Version 4.7 · As of 2026-10-31 · for Claude Code, Codex, OpenCode and similar AI tools · Previous version:
 version 3 (German, not published) · Summary to share: [README.md](../README.md)
 
 This document describes a proven pattern that lets **one human run many AI sessions at the same time** on one project
@@ -130,10 +130,12 @@ measures the value its own work will later be measured against. It hands off eve
 | **Memory** | what is not in the code: preferences, corrections, pitfalls, decisions with reasons | one file per insight + a short index; versioned itself |
 | **Lock** | exactly one session at an exclusive resource | lock file with owner, purpose, expected end; tool `status/acquire/extend/release` |
 | **Backup** | way back before every risky step | fixed location (best a network drive/NAS), folder with date and occasion, hashes |
-| **Drop folder** | assignments and reports when messages may not arrive safely or a tool cannot send messages | shared folder, e.g. `<from>-to-<to>/<assignment>/` or `inbox/ running/ done/` |
+| **Drop folder** | assignments and reports when messages may not arrive safely or a tool cannot send messages | shared folder, e.g. `<from>-to-<to>/<assignment>/`; as a mailbox with the compartments `decide/`, `ready/`, `info/`, `done/` and a fixed header (5.12) |
 | **Working copy** | helpers and external workers work apart from the main state | Git worktree or own working folder; result as a patch with base hashes |
 | **Tool profile** | which model is good for what, what it costs, where its limits are | table or memory entries; add to it after every experience |
 | **Quota board** | state of all quotas (week, short window, reset), thresholds | entries in the log at every planning; query commands in the project block |
+| **Task board** | all open tasks at a glance, also after a context summarization | one line per task: who, status, next step, blocker, last movement; machine-readable, only the coordinator writes it; displayed automatically in the shared task list; update before every summarization (5.12) |
+| **Routes board** | who reaches whom how | a list with the command for each route between coordinator, helpers and computers (5.12) |
 | **Wake-up call** | trigger the coordinator again after a quota reset or at a fixed time | scheduled one-time job; the plan for it is a file in the task record |
 | **Number ranges** | unique IDs | e.g. `T-<TOPIC>-<YYYYMMDD>`; only the coordinator assigns |
 
@@ -245,6 +247,10 @@ folder, only note the hash), write a takeover note with the result per acceptanc
 of reinterpreting them. Ask every delivery right away for a machine-readable self-check (e.g. re-import test, check
 sheet, counts).
 
+**Check outside analyses instead of adopting them:** if the human brings another model's analysis, the coordinator checks
+every point against the real state (files, timestamps), says clearly what is right, what is not and what is missing, and
+gives its own recommendation. Acknowledge valid findings openly, name wrong conclusions.
+
 ### 5.8 Version control (only with the human's yes)
 
 1. Dry run without writing: how many files, what size, what goes into large-file storage (LFS), what must never go in?
@@ -308,6 +314,46 @@ record, a working copy and a merge. That calculation is misleading.
   that is loaded at every start. In practice, the change came from three things together: that question, a growing load
   (from about ten parallel sessions) and tight quota and context.
 
+### 5.12 Leave no task lying idle
+
+A coordinator that only reacts to new messages and files forgets the tasks that lie idle. The human only notices when they
+ask.
+
+- **Task board instead of a status of the hot topic:** a status that only describes the most important topic of the moment
+  makes all other tasks disappear after every context summarization. So the coordinator keeps a short board of all open
+  tasks: who, status, next step, blocker, last movement – machine-readable too. Update it before every summarization and
+  read it first afterwards. A line is only removed when the result is tested and integrated.
+- **One source, one automatic display:** the board is a machine-readable file that only the coordinator writes (per task:
+  ID, name, who, status – running, to assign, waiting for the human, paused –, next step, blocker and the exact folders
+  for measuring movement). A check script generates from it, on every run, a section at the top of the shared task list
+  that all agents read at start (marked "do not edit by hand"). A copy maintained by hand goes stale; a file only for the
+  coordinator is seen by no one else.
+- **Idle watcher next to the event watcher:** a watcher that only reacts to new files or messages never sees what lies idle
+  – a helper that has stopped writes no file. A second watcher measures, per task, the age of the last movement (e.g. the
+  newest file in the task folder) and raises an alarm: running but no movement for more than 12 hours; no owner; a
+  workbench free for longer than an adjustable idle time (e.g. 45 minutes – shorter wakes it up in vain all the time when
+  nothing is ready). The watcher script lives in the project under version control, its state (markers, ignore list) in a
+  fixed folder outside the temporary session folder, created when needed.
+- **Mailbox with fixed compartments instead of word search:** subfolders `decide/` (halt or question: wake up at once),
+  `ready/` (delivery: wake up at once), `info/` (interim status: do not wake up) and `done/` (only the coordinator moves
+  files here). Fixed header: line 1 a clear sentence, line 2 "type | task | answer needed". No receipts for receipts. From
+  practice: a watcher that only searched for signal words in file names missed deliveries whose signal word was in the
+  text; two finished deliveries and a stop went unnoticed that way. For a transition, the watcher also reads the first
+  lines of new files.
+- **A free workbench is an alarm:** if a workbench is idle, the coordinator immediately assigns the next task from the
+  board (golden rule).
+- **Priority is not a pause for everything else:** "topic X has priority" means X gets the workbench first. The other
+  tasks keep an owner and a next step and continue offline or on the other building site.
+- **Check blockers instead of believing them – with a routes board:** if an agent reports "helper X cannot be reached",
+  the coordinator first checks memory and docs. All routes are in one place, concretely: for each agent the exact command
+  or address, the thread ID and where the answer goes. A local queue command only works on the computer where the thread
+  lives; for the second computer, the coordinator there delivers. Outdated sentences about routes ("doesn't work, the
+  human has to paste it") are dangerous, because they are believed again after every summarization: replace them as soon
+  as they are found. The human is never the messenger between agents.
+- **Speed over collecting evidence:** very thorough helpers collect more evidence than needed, and the human experiences
+  that as standstill. Every package gets a time frame (e.g. offline 60 minutes, at the workbench 60 to 90 minutes) and a
+  report of at most one page. The protection rules stay unchanged.
+
 ---
 
 ## 6. Communication
@@ -369,6 +415,10 @@ record, a working copy and a merge. That calculation is misleading.
   hash) – in practice nobody read handoff files over 1 MB in full. Do not archive old coordinator sessions without
   asking – some humans are attached to them.
 - **Keep the log separate from the task records** in its own place: append only, time from the clock.
+- **Summarize with judgment:** do not cut at a fixed threshold. A large working memory knows the current topic very well.
+  Summarize at natural pauses (topic finished, change of topic, before the night), never in the middle of the hot topic.
+  The task board protects against forgetting, not the cutting. The reading order after every summarization is at the top
+  of the coordinator's working file: status, board, routes, then check script, then daily log.
 
 **Task records**
 - **Start lean:** `brief.md` (goal, the human's words), `state.yaml` (state, acceptance points, decisions with their
@@ -415,6 +465,9 @@ record, a working copy and a merge. That calculation is misleading.
   beforehand.
 - Check regularly whether both computers are in sync (same commits, same important unversioned files).
 - Test tools that watch the working tree with a process counter first (risk of hundreds of Git processes).
+- **One working-method file for all sub-coordinators** (station leads, leads of a helper group): do not hand out new rules
+  piece by piece in single messages, but in one file that all sub-coordinators receive – also on the second computer – and
+  pass on to their helpers. Otherwise a sub-coordinator only knows fragments of the new rules.
 
 **Tools without messages between sessions (e.g. Codex, OpenCode)**
 - **Rules file:** Codex and OpenCode read `AGENTS.md` (in the project and globally), Claude Code reads `CLAUDE.md`. Put the
@@ -489,6 +542,9 @@ record, a working copy and a merge. That calculation is misleading.
   docs) in the background, then a spot check by the coordinator and a second check by another model. This makes findings
   reliable.
 - **After sending, check that the helper has picked up the task**; report silent queues to the human early.
+- **A mark is not a change:** tools often mark objects as "changed" when loading or rebuilding, without any file changing.
+  What counts for a stop is the hash of the file on disk, not the number of marks – otherwise careful helpers keep
+  stopping for no reason.
 
 ---
 
@@ -604,6 +660,8 @@ Running locks/watchers/wake-up calls: <list>. Quotas: <state>. Do not forget: <p
 - The coordinator implements "just quickly" itself while messages wait and helpers sit idle.
 - A shared task-record index that a single faulty file stops for all sessions.
 - A heavy task-record tool from the start, before the record structure itself is settled.
+- Only a watcher for new events: tasks that lie idle go unnoticed (5.12).
+- The human as the messenger between agents, because nobody looked up the route (5.12).
 
 ---
 
@@ -721,6 +779,14 @@ evidence. The two do not exclude each other.
 ---
 
 ## 17. Changes compared with version 3
+
+**Version 4.7 (31 Oct):** New section 5.12 "Leave no task lying idle": task board instead of a status of the hot topic,
+idle watcher next to the event watcher, a free workbench as an alarm, priority without a pause for the rest, check
+blockers with a routes board, speed over collecting evidence. Building blocks task board and routes board (4), two
+typical mistakes (14), golden rule extended by two points. Addendum from putting it into practice: the board as one
+source with an automatic display, a mailbox with fixed compartments instead of word search, a robust watcher with an
+adjustable idle time, a concrete routes board (5.12); check outside analyses (5.7); summarize with judgment (8); one
+working-method file for all sub-coordinators (9); a mark is not a change (11).
 
 **Version 4.6 (28 Oct):** Separate file [Golden-Rule.md](Golden-Rule.md): every computer with its own workbench is a
 building site, not just a test site; only the real exclusive resource is limited; no artificial limit that hides a

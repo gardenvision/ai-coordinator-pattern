@@ -1,6 +1,6 @@
 # KI-Koordinator-Muster (Orchestrator) – projektneutral
 
-Fassung 4.6 · Stand 2026-10-28 · für Claude Code, Codex, OpenCode und vergleichbare KI-Werkzeuge · Vorgänger:
+Fassung 4.7 · Stand 2026-10-31 · für Claude Code, Codex, OpenCode und vergleichbare KI-Werkzeuge · Vorgänger:
 Fassung 3 (nicht veröffentlicht) · Kurzfassung zum Weitergeben: [README.de.md](../README.de.md)
 
 Dieses Dokument beschreibt ein erprobtes Muster, mit dem **ein Mensch viele KI-Sessions gleichzeitig** an einem Projekt
@@ -131,10 +131,12 @@ Wert misst, an dem später ihre eigene Arbeit gemessen wird. Alles andere gibt e
 | **Gedächtnis** | was nicht im Code steht: Vorlieben, Korrekturen, Fallen, Entscheidungen mit Grund | eine Datei je Erkenntnis + kurzer Index; selbst versioniert |
 | **Sperre** | genau eine Session an einer exklusiven Ressource | Sperrdatei mit Besitzer, Zweck, erwartetem Ende; Werkzeug `status/acquire/extend/release` |
 | **Sicherung** | Rückweg vor jedem riskanten Schritt | festgelegter Ort (am besten Netzlaufwerk/NAS), Ordner mit Datum und Anlass, Hashes |
-| **Ablage** | Aufträge und Berichte, wenn Nachrichten nicht sicher ankommen oder ein Werkzeug keine Nachrichten kann | gemeinsamer Ordner, z. B. `<von>-to-<an>/<Auftrag>/` bzw. `inbox/ running/ done/` |
+| **Ablage** | Aufträge und Berichte, wenn Nachrichten nicht sicher ankommen oder ein Werkzeug keine Nachrichten kann | gemeinsamer Ordner, z. B. `<von>-to-<an>/<Auftrag>/`; als Briefkasten mit den Fächern `entscheid/`, `bereit/`, `info/`, `erledigt/` und festem Kopf (5.12) |
 | **Arbeitskopie** | Helfer und Zuarbeiter arbeiten getrennt vom Hauptstand | Git-Worktree oder eigener Arbeitsordner; Ergebnis als Patch mit Basis-Hashes |
 | **Werkzeug-Steckbrief** | welches Modell wofür taugt, was es kostet, wo seine Grenzen liegen | Tabelle oder Gedächtnis-Einträge; nach jeder Erfahrung ergänzen |
 | **Kontingent-Tafel** | Stand aller Kontingente (Woche, Kurzfenster, Reset), Schwellen | Einträge im Protokoll bei jeder Planung; Abfrage-Befehle im Projektblock |
+| **Aufgaben-Tafel** | alle offenen Aufgaben auf einen Blick, auch nach einer Kontext-Verdichtung | eine Zeile je Aufgabe: wer, Stand, nächster Schritt, Blocker, letzte Bewegung; maschinenlesbar, nur der Koordinator schreibt; Anzeige automatisch in der gemeinsamen Aufgabenliste; vor jeder Verdichtung aktualisieren (5.12) |
+| **Wegetafel** | wer erreicht wen wie | eine Liste mit dem Befehl je Weg zwischen Koordinator, Helfern und Rechnern (5.12) |
 | **Wecker** | Koordinator nach einem Kontingent-Reset oder zu fester Zeit wieder anstoßen | geplanter Einmal-Auftrag; der Plan dazu liegt als Datei in der Akte |
 | **Nummernräume** | eindeutige IDs | z. B. `T-<THEMA>-<JJJJMMTT>`; nur der Koordinator vergibt |
 
@@ -242,6 +244,10 @@ Bericht und Rohdaten holen, Prüfsummen nachrechnen, in die Akte übernehmen (gr
 notieren), Übernahme-Notiz mit Ergebnis je Abnahmepunkt. Abweichungen offen benennen statt umdeuten. Von Zulieferungen gleich
 eine maschinenlesbare Selbstprüfung verlangen (z. B. Rückimport-Test, Prüfbogen, Zählwerte).
 
+**Externe Analysen prüfen statt übernehmen:** Bringt der Mensch die Analyse eines anderen Modells, prüft der Koordinator jeden
+Punkt am echten Stand (Dateien, Zeitstempel), sagt klar, was stimmt, was nicht und was fehlt, und gibt eine eigene
+Empfehlung. Berechtigte Funde offen anerkennen, falsche Schlüsse benennen.
+
 ### 5.8 Versionsverwaltung (nur mit Ja des Menschen)
 
 1. Probelauf ohne Schreiben: Wie viele Dateien, welche Größe, was geht in große Speicher (LFS), was darf nie mit?
@@ -305,6 +311,45 @@ Zusammenführen. Diese Rechnung täuscht.
   Gedächtnis-Eintrag festhalten, der bei jedem Start geladen wird. In der Praxis kam der Wandel aus drei Dingen zusammen:
   dieser Rückfrage, wachsender Last (ab etwa zehn parallelen Sessions) und knappem Kontingent und Kontext.
 
+### 5.12 Keine Aufgabe liegen lassen
+
+Ein Koordinator, der nur auf neue Nachrichten und Dateien reagiert, vergisst die Aufgaben, die still liegen. Der Mensch merkt
+das erst, wenn er nachfragt.
+
+- **Aufgaben-Tafel statt Stand des heißen Themas:** Ein Stand, der nur das gerade wichtigste Thema beschreibt, lässt nach jeder
+  Kontext-Verdichtung alle anderen Aufgaben verschwinden. Darum führt der Koordinator eine kurze Tafel über alle offenen
+  Aufgaben: wer, Stand, nächster Schritt, Blocker, letzte Bewegung – auch maschinenlesbar. Vor jeder Verdichtung aktualisieren,
+  danach zuerst lesen. Eine Zeile wird erst gestrichen, wenn das Ergebnis getestet und eingespielt ist.
+- **Eine Quelle, eine automatische Anzeige:** Die Tafel ist eine maschinenlesbare Datei, in die nur der Koordinator schreibt
+  (je Aufgabe: Kennung, Name, wer, Status – läuft, zuteilen, wartet auf den Menschen, pausiert –, nächster Schritt, Blocker
+  und die genauen Ordner für die Bewegungsmessung). Ein Prüfskript erzeugt daraus bei jedem Lauf einen Abschnitt oben in der
+  gemeinsamen Aufgabenliste, die alle Agenten beim Start lesen (mit dem Hinweis „nicht von Hand ändern“). Eine von Hand
+  gepflegte Kopie veraltet; eine Datei nur für den Koordinator sieht sonst niemand.
+- **Stillstand-Wächter neben dem Ereignis-Wächter:** Ein Wächter, der nur auf neue Dateien oder Nachrichten reagiert, sieht nie,
+  was still liegt – ein stehender Helfer schreibt keine Datei. Ein zweiter Wächter misst je Aufgabe das Alter der letzten
+  Bewegung (z. B. die neueste Datei im Aufgabenordner) und meldet: läuft, aber länger als 12 Stunden ohne Bewegung; ohne
+  Besitzer; eine Werkbank länger frei als eine einstellbare Leerlaufzeit (z. B. 45 Minuten – kürzer weckt ständig umsonst,
+  wenn gerade nichts bereit ist). Das Wächterskript liegt versioniert im Projekt, sein Zustand (Marker, Ignorierliste) in
+  einem festen Ordner außerhalb des temporären Sitzungsordners, der bei Bedarf angelegt wird.
+- **Briefkasten mit festen Fächern statt Wortsuche:** Unterordner `entscheid/` (Halt oder Frage: sofort wecken), `bereit/`
+  (Abgabe: sofort wecken), `info/` (Zwischenstand: nicht wecken) und `erledigt/` (nur der Koordinator verschiebt hierher).
+  Fester Kopf: Zeile 1 ein klarer Satz, Zeile 2 „Typ | Aufgabe | Antwort nötig“. Keine Quittungen für Quittungen. Aus der
+  Praxis: Ein Wächter, der nur Signalwörter im Dateinamen suchte, übersah Abgaben, deren Signalwort im Text stand; zwei
+  fertige Abgaben und ein Stopp lagen so unbemerkt. Übergangsweise liest der Wächter auch die ersten Zeilen neuer Dateien.
+- **Eine freie Werkbank ist ein Alarm:** Steht eine Werkbank leer, vergibt der Koordinator sofort die nächste Aufgabe von der
+  Tafel (Goldene Regel).
+- **Vorrang ist keine Pause für alles andere:** „Thema X hat Vorrang“ heißt: X bekommt zuerst die Werkbank. Die anderen Aufgaben
+  behalten einen Besitzer und einen nächsten Schritt und laufen offline oder auf dem anderen Bauplatz weiter.
+- **Blocker prüfen statt glauben – mit einer Wegetafel:** Meldet ein Agent „Helfer X ist nicht erreichbar“, prüft der
+  Koordinator zuerst Gedächtnis und Doku. Alle Wege stehen an einer Stelle, konkret: für jeden Agenten der genaue Befehl bzw.
+  die Adresse, die Thread-Kennung und wohin die Antwort kommt. Ein lokaler Warteschlangen-Befehl wirkt nur auf dem Rechner,
+  auf dem der Thread liegt; für den zweiten Rechner stellt der dortige Koordinator zu. Veraltete Sätze über Wege („geht nicht,
+  der Mensch muss das einfügen“) sind gefährlich, weil sie nach jeder Verdichtung wieder geglaubt werden: beim Fund sofort
+  ersetzen. Der Mensch ist nie der Briefträger zwischen Agenten.
+- **Tempo vor Belegsammlung:** Sehr gründliche Helfer sammeln mehr Belege als nötig, und der Mensch erlebt das als Stillstand.
+  Jedes Paket bekommt einen Zeitrahmen (z. B. offline 60 Minuten, an der Werkbank 60 bis 90 Minuten) und einen Bericht von
+  höchstens einer Seite. Die Schutzregeln bleiben unverändert.
+
 ---
 
 ## 6. Kommunikation
@@ -366,6 +411,10 @@ Zusammenführen. Diese Rechnung täuscht.
   Nachweise nur verlinken (mit Hash) – Übergabedateien von über 1 MB hat in der Praxis niemand ganz gelesen. Alte
   Koordinator-Sessions nicht ungefragt archivieren – manche Menschen hängen an ihnen.
 - **Protokoll getrennt von den Akten** an einem eigenen Ort führen: nur anhängen, Uhrzeit von der Uhr.
+- **Verdichten mit Augenmaß:** nicht nach festem Grenzwert kürzen. Ein großes Arbeitsgedächtnis kennt das laufende Thema
+  sehr genau. Verdichten an natürlichen Pausen (Thema fertig, Themenwechsel, vor der Nacht), nie mitten im heißen Thema.
+  Gegen das Vergessen schützt die Aufgaben-Tafel, nicht das Kürzen. Die Lesereihenfolge nach jeder Verdichtung steht ganz
+  oben in der Arbeitsdatei des Koordinators: Stand, Tafel, Wege, dann Prüfskript, dann Tagesprotokoll.
 
 **Aufgabenakten**
 - **Schlank beginnen:** `brief.md` (Ziel, Wortlaut des Menschen), `state.yaml` (Zustand, Abnahmepunkte, Entscheidungen
@@ -411,6 +460,9 @@ Zusammenführen. Diese Rechnung täuscht.
 - Eine Sandbox sieht oft nicht alles (z. B. Netzlaufwerke): Eingangsdaten vorher selbst in die Akte legen.
 - Regelmäßig prüfen, ob beide Rechner synchron sind (gleiche Commits, gleiche wichtige nicht versionierte Dateien).
 - Werkzeuge, die den Arbeitsbaum beobachten, vorher mit einem Prozesszähler testen (Gefahr von Hunderten Git-Prozessen).
+- **Eine Arbeitsweise-Datei für alle Teilkoordinatoren** (Stationsleiter, Führer einer Helfer-Gruppe): neue Regeln nicht
+  stückweise in einzelnen Nachrichten verteilen, sondern in einer Datei, die alle Teilkoordinatoren erhalten – auch auf dem
+  zweiten Rechner – und an ihre Helfer weitergeben. Sonst kennt ein Teilkoordinator nur Bruchstücke der neuen Regeln.
 
 **Werkzeuge ohne Nachrichten zwischen Sessions (z. B. Codex, OpenCode)**
 - **Regeldatei:** Codex und OpenCode lesen `AGENTS.md` (im Projekt und global), Claude Code liest `CLAUDE.md`. Muster und
@@ -480,6 +532,9 @@ Zusammenführen. Diese Rechnung täuscht.
 - **Nur-Lese-Prüfungen parallel:** mehrere unabhängige Prüfaufträge (Netzvertrag, Leistung, Speicher, Speicherplatz, Doku) im Hintergrund,
   dann Stichprobe durch den Koordinator und Zweitprüfung durch ein anderes Modell. So werden Funde belastbar.
 - **Nach dem Senden prüfen, ob der Helfer den Auftrag aufgenommen hat**; still liegende Warteschlangen früh dem Menschen melden.
+- **Markierung ist nicht Änderung:** Werkzeuge markieren beim Laden oder Neubauen oft Objekte als „geändert“, ohne dass sich
+  eine Datei ändert. Maßgeblich für einen Stopp ist der Hash der Datei auf der Platte, nicht die Zahl der Markierungen –
+  sonst halten vorsichtige Helfer immer wieder grundlos an.
 
 ---
 
@@ -595,6 +650,8 @@ Laufende Sperren/Wächter/Wecker: <Liste>. Kontingente: <Stand>. Nicht vergessen
 - Der Koordinator setzt „nur kurz“ selbst um, während Nachrichten liegen und Helfer warten.
 - Ein gemeinsamer Akten-Index, den eine einzige fehlerhafte Datei für alle Sessions anhält.
 - Ein schweres Akten-Werkzeug von Anfang an, bevor die Aktenstruktur selbst sitzt.
+- Nur ein Wächter für neue Ereignisse: Aufgaben, die still liegen, fallen niemandem auf (5.12).
+- Der Mensch als Briefträger zwischen Agenten, weil niemand den Weg nachgesehen hat (5.12).
 
 ---
 
@@ -712,6 +769,14 @@ strengen Freigaben mit Nachweisen. Beides schließt sich nicht aus.
 ---
 
 ## 17. Änderungen gegenüber Fassung 3
+
+**Fassung 4.7 (31.10.):** Neuer Abschnitt 5.12 „Keine Aufgabe liegen lassen“: Aufgaben-Tafel statt Stand des heißen Themas,
+Stillstand-Wächter neben dem Ereignis-Wächter, freie Werkbank als Alarm, Vorrang ohne Pause für den Rest, Blocker prüfen mit
+einer Wegetafel, Tempo vor Belegsammlung. Bausteine Aufgaben-Tafel und Wegetafel (4), zwei typische Fehler (14), Goldene
+Regel um zwei Punkte ergänzt. Nachtrag aus der Umsetzung: Tafel als eine Quelle mit automatischer Anzeige, Briefkasten mit
+festen Fächern statt Wortsuche, robuster Wächter mit einstellbarer Leerlaufzeit, konkrete Wegetafel (5.12); externe
+Analysen prüfen (5.7); Verdichten mit Augenmaß (8); eine Arbeitsweise-Datei für alle Teilkoordinatoren (9);
+Markierung ist nicht Änderung (11).
 
 **Fassung 4.6 (28.10.):** Eigene Datei [Goldene-Regel.md](Goldene-Regel.md): Jeder Rechner mit eigener Werkbank ist ein
 Bauplatz, nicht nur ein Prüfplatz; begrenzt wird nur die echte exklusive Ressource; keine künstliche Grenze, die einen

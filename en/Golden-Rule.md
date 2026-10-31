@@ -1,6 +1,6 @@
 # AI Coordinator Pattern – Golden Rule
 
-As of 2026-10-28 · belongs to [AI-Coordinator-Pattern.md](AI-Coordinator-Pattern.md) (version 4.6)
+As of 2026-10-31 · belongs to [AI-Coordinator-Pattern.md](AI-Coordinator-Pattern.md) (version 4.7)
 
 > **Every computer with its own workbench is a building site of its own, not just a test site.
 > Spread the integration work across all building sites.**
@@ -14,7 +14,7 @@ for exactly this: with its own editor and its own agents.
 
 ---
 
-## The four points
+## The six points
 
 1. **Only the real exclusive resource is limited.** On each computer, exactly one agent at a time works in the editor
    (window protocol, pattern 5.1). Offline work – reading, planning, writing patches, compiling offline, background tools –
@@ -31,11 +31,17 @@ for exactly this: with its own editor and its own agents.
 4. **All building sites on the same main line.** After every integration, the coordinator supplies all building sites with
    the same state (e.g. push to all remotes, then pull on every computer). Before every assignment, it checks what is
    already done offline or running elsewhere, so nothing is built twice.
+5. **A free workbench is an alarm.** Even when the human gives one topic priority, its steps do not run one after another
+   through a single workbench while the second one stands idle. Steps and other tasks are spread across all building
+   sites. An idle watcher reports a workbench that has been free for longer than an adjustable idle time (pattern 5.12).
+6. **Priority is not a pause for everything else.** "Topic X has priority" means X gets the workbench first. The other
+   tasks keep an owner and a next step and continue offline or on the other building site.
 
 ---
 
 ## Quick check before every assignment
 
+- Is a workbench idle? Then immediately assign the next task from the task board.
 - Which building sites are free, and is the editor there free?
 - Does the package need a not yet integrated state, or does it touch non-mergeable files of a running integration?
   Then it stays on that building site.
@@ -44,5 +50,5 @@ for exactly this: with its own editor and its own agents.
 
 ## Related sections in the pattern
 
-5.1 Window protocol · 5.2 Shared files and numbers · 5.11 Delegate instead of implementing yourself · 9 Several computers ·
-11 Proven lessons (its own rhythm, define "done" up front)
+5.1 Window protocol · 5.2 Shared files and numbers · 5.11 Delegate instead of implementing yourself ·
+5.12 Leave no task lying idle · 9 Several computers · 11 Proven lessons (its own rhythm, define "done" up front)
