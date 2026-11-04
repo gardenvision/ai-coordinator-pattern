@@ -1,6 +1,6 @@
 # AI Coordinator Pattern – Golden Rule
 
-As of 2026-10-31 · belongs to [AI-Coordinator-Pattern.md](AI-Coordinator-Pattern.md) (version 4.7)
+As of 2026-10-31 · belongs to [AI-Coordinator-Pattern.md](AI-Coordinator-Pattern.md) (version 4.8)
 
 > **Every computer with its own workbench is a building site of its own, not just a test site.
 > Spread the integration work across all building sites.**

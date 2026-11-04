@@ -1,6 +1,6 @@
 # KI-Koordinator-Muster (Orchestrator) – projektneutral
 
-Fassung 4.7 · Stand 2026-10-31 · für Claude Code, Codex, OpenCode und vergleichbare KI-Werkzeuge · Vorgänger:
+Fassung 4.8 · Stand 2026-11-05 · für Claude Code, Codex, OpenCode und vergleichbare KI-Werkzeuge · Vorgänger:
 Fassung 3 (nicht veröffentlicht) · Kurzfassung zum Weitergeben: [README.de.md](../README.de.md)
 
 Dieses Dokument beschreibt ein erprobtes Muster, mit dem **ein Mensch viele KI-Sessions gleichzeitig** an einem Projekt
@@ -376,6 +376,20 @@ das erst, wenn er nachfragt.
 - **Sparsam:** Jede Nachricht kostet beide Seiten eine volle Runde mit dem ganzen Kontext. Nur schreiben, wenn der Empfänger
   etwas tun oder entscheiden muss. Zwischenstände als Datei; laufende Sessions nicht mit Zwischenfragen stören.
 
+**Verbesserung aus dem Gespräch**
+- **Was der Mensch beiträgt:** Er legt dauerhaft eine klare Grenze fest: Kleines und Umkehrbares machen und danach Bescheid
+  sagen; was auf andere wirkt oder nicht umkehrbar ist, vorher fragen. Ohne diese Grenze wird aus jeder Einsicht eine Rückfrage.
+  Verständnisfragen („Stimmt es, dass …?“) zwingen den Koordinator zu rechnen und zu begründen. Dort entstehen die Funde, das
+  ist kein Zeitverlust. Was gut lief, benennt er konkret.
+- **Erklären heißt gegen sich selbst prüfen:** Wer eine Regel oder Rechnung erklärt, sieht nach, ob der eigene Betrieb ihr
+  folgt. Aus der Praxis: Beim Vorrechnen, wie lange ein Zwischenspeicher hält, fiel auf, dass der eigene Wächter länger schlafen
+  konnte, als die Rechnung erlaubte.
+- **Eine Einsicht wird im selben Zug Handlung oder Aufgabe, nie nur „man könnte“:** Kleines und Umkehrbares am eigenen Betrieb
+  (Wächter, Koordinationsdateien) sofort; Größeres und alles am Produkt als Paket an einen Helfer (5.11); was ein Ja braucht, in
+  die gebündelte Entscheidungsliste. Vorher den echten Stand nachlesen, die Änderung im selben Text melden, ihre Grenzen dazusagen.
+- **Grenze:** Das ist eine Einschätzung aus der Praxis, nicht gemessen, und eine Haltung, keine Garantie. Was trotz Regel
+  wiederkehrt, gehört in Technik (Skript, Wächter, Haken), nicht in einen weiteren Satz.
+
 ---
 
 ## 7. Tag- und Nachtmodus
@@ -405,6 +419,9 @@ das erst, wenn er nachfragt.
   vorhandene Einträge aktualisieren statt doppeln; Falsches löschen. **Das Gedächtnis selbst versionieren:** eigenes kleines
   Repository, Kopie auf dem Sicherungslaufwerk und optional privat extern; nach jeder Änderung committen. Es ist das
   wertvollste Gut, mehrere Sessions schreiben hinein, und so wird jedes Überschreiben sichtbar und rückholbar.
+- **Lehren sofort und mit Begründung:** Jeder Eintrag nennt Warum und Wie-anwenden; die Begründung trägt die Regel in neue
+  Lagen, die der Mensch nie genannt hat. Auch Bestätigungen speichern, nicht nur Fehler, sonst driftet der Koordinator von
+  dem weg, was schon gut läuft.
 - **Was der Mensch sagt und zeigt:** Wortlaut ins Protokoll, Bilder sofort in die Akte (5.3).
 - **Übergabe:** Vor einem Wechsel der Session (voller Kontext) oder des Rechners eine geprüfte Übergabe schreiben (Stand,
   offene Punkte, nächste Schritte, wichtige Pfade, laufende Sperren und Wächter). **Übergaben klein halten,** große
@@ -769,6 +786,10 @@ strengen Freigaben mit Nachweisen. Beides schließt sich nicht aus.
 ---
 
 ## 17. Änderungen gegenüber Fassung 3
+
+**Fassung 4.8 (05.11.):** Abschnitt 6 „Verbesserung aus dem Gespräch“: was der Mensch beiträgt, Erklären als Selbstprüfung,
+eine Einsicht wird im selben Zug Handlung oder Aufgabe, Grenze dieser Haltung. Abschnitt 8: Lehren sofort und mit Begründung,
+auch Bestätigungen.
 
 **Fassung 4.7 (31.10.):** Neuer Abschnitt 5.12 „Keine Aufgabe liegen lassen“: Aufgaben-Tafel statt Stand des heißen Themas,
 Stillstand-Wächter neben dem Ereignis-Wächter, freie Werkbank als Alarm, Vorrang ohne Pause für den Rest, Blocker prüfen mit

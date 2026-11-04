@@ -1,6 +1,6 @@
 # AI Coordinator Pattern (orchestrator) – project-neutral
 
-Version 4.7 · As of 2026-10-31 · for Claude Code, Codex, OpenCode and similar AI tools · Previous version:
+Version 4.8 · As of 2026-11-05 · for Claude Code, Codex, OpenCode and similar AI tools · Previous version:
 version 3 (German, not published) · Summary to share: [README.md](../README.md)
 
 This document describes a proven pattern that lets **one human run many AI sessions at the same time** on one project
@@ -381,6 +381,21 @@ ask.
 - **Frugal:** every message costs both sides a full round with the whole context. Only write when the receiver has to
   do or decide something. Interim states as a file; do not disturb running sessions with interim questions.
 
+**Improvements from the conversation**
+- **What the human contributes:** They set a clear, lasting limit: small and reversible things get done and reported
+  afterwards; whatever affects others or cannot be undone gets asked first. Without this limit, every insight turns into a
+  question back. Questions of understanding ("Is it true that …?") force the coordinator to calculate and give reasons. That
+  is where the findings come from; it is not lost time. They name specifically what went well.
+- **Explaining means checking yourself:** whoever explains a rule or a calculation checks whether their own operation follows
+  it. From practice: while working out how long a cache lasts, the coordinator noticed that its own watcher could sleep longer
+  than the calculation allowed.
+- **An insight becomes an action or a task in the same turn, never just "one could":** small, reversible things in the
+  coordinator's own operation (watchers, coordination files) at once; larger things and anything in the product as a package
+  for a helper (5.11); whatever needs a yes goes into the bundled decision list. Read the real state first, report the change
+  in the same text, state its limits.
+- **Limit:** this is an assessment from practice, not measured, and an attitude, not a guarantee. What recurs despite a rule
+  belongs in technology (script, watcher, hook), not in one more sentence.
+
 ---
 
 ## 7. Day and night mode
@@ -409,6 +424,9 @@ ask.
   entries instead of duplicating them; delete what is wrong. **Version the memory itself:** its own small repository, a
   copy on the backup drive and optionally a private external one; commit after every change. It is the most valuable
   asset, several sessions write into it, and this way every overwrite becomes visible and can be undone.
+- **Lessons at once and with reasons:** every entry states why and how to apply it; the reason carries the rule into new
+  situations the human never mentioned. Save confirmations too, not just mistakes, otherwise the coordinator drifts away
+  from what already works.
 - **What the human says and shows:** the words into the log, images into the task record at once (5.3).
 - **Handoff:** Before switching the session (full context) or the computer, write a checked handoff (state, open points,
   next steps, important paths, running locks and watchers). **Keep handoffs small,** only link large evidence (with
@@ -779,6 +797,10 @@ evidence. The two do not exclude each other.
 ---
 
 ## 17. Changes compared with version 3
+
+**Version 4.8 (5 Nov):** Section 6 "Improvements from the conversation": what the human contributes, explaining as a
+self-check, an insight becomes an action or a task in the same turn, the limit of this attitude. Section 8: lessons at once
+and with reasons, confirmations too.
 
 **Version 4.7 (31 Oct):** New section 5.12 "Leave no task lying idle": task board instead of a status of the hot topic,
 idle watcher next to the event watcher, a free workbench as an alarm, priority without a pause for the rest, check

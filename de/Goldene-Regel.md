@@ -1,6 +1,6 @@
 # KI-Koordinator-Muster – Goldene Regel
 
-Stand 2026-10-31 · gehört zu [KI-Koordinator-Muster.md](KI-Koordinator-Muster.md) (Fassung 4.7)
+Stand 2026-10-31 · gehört zu [KI-Koordinator-Muster.md](KI-Koordinator-Muster.md) (Fassung 4.8)
 
 > **Jeder Rechner mit eigener Werkbank ist ein eigener Bauplatz, nicht nur ein Prüfplatz.
 > Verteile die Einbauten auf alle Bauplätze.**
