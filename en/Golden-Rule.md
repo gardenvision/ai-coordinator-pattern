@@ -26,7 +26,7 @@ for exactly this: with its own editor and its own agents.
    them down.
 3. **What stays on a building site and what moves.** Work stays on a computer if it needs that computer's not yet integrated
    state or touches the same non-mergeable files as an integration running there (e.g. binary files, large files in LFS,
-   shared save or network files). Everything else goes to the other building sites on its own branches. The coordinator
+   shared configuration or schema files). Everything else goes to the other building sites on its own branches. The coordinator
    merges and assigns the shared numbers (pattern 5.2 and 9).
 4. **All building sites on the same main line.** After every integration, the coordinator supplies all building sites with
    the same state (e.g. push to all remotes, then pull on every computer). Before every assignment, it checks what is

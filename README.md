@@ -69,7 +69,7 @@ The coordinator does not build things itself. It keeps the overview, sets the or
    *Why:* These steps cannot be undone, or only with great effort.
 9. **Values only after measuring, times from the clock, own interpretations marked as assumptions.**
    *Why:* Estimated times and unchecked values sound certain, but they are not. A "surprisingly fast" measurement once
-   came from the fact that nothing was rendered at all.
+   came from the fact that the test did not process anything at all.
 10. **Every lesson goes into memory and goes out to all sessions as a rule.**
     *Why:* The coordinator has no hidden state. What is not written down, the next session does not know.
     So the memory itself is kept under version control.

@@ -66,7 +66,7 @@ Der Koordinator setzt selbst nichts um. Er hält den Überblick, vergibt Reihenf
    *Warum:* Diese Schritte lassen sich nicht oder nur schwer zurückholen.
 9. **Werte erst nach Messung, Uhrzeiten von der Uhr, eigene Deutungen als Annahme.**
    *Warum:* Geschätzte Zeiten und ungeprüfte Werte klingen sicher, sind es aber nicht. Ein „überraschend schneller“
-   Messwert kam einmal daher, dass gar nichts gezeichnet wurde.
+   Messwert kam einmal daher, dass der Test gar nichts verarbeitet hatte.
 10. **Jede Lehre geht ins Gedächtnis und als Regel an alle Sessions.**
     *Warum:* Der Koordinator hat keinen versteckten Zustand. Was nicht aufgeschrieben ist, kennt die nächste Session nicht.
     Das Gedächtnis wird darum selbst versioniert.

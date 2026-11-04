@@ -26,7 +26,7 @@ gerade dafür eingerichtet: mit eigenem Editor und eigenen Agenten.
    Grenze bremste nur noch.
 3. **Was auf einem Bauplatz bleibt und was wandert.** Auf einem Rechner bleibt, was dessen noch nicht eingespielten Stand
    braucht oder dieselben nicht mischbaren Dateien berührt wie ein laufender Einbau dort (z. B. Binärdateien, große Dateien
-   in LFS, gemeinsame Speicher- oder Netzwerkdateien). Alles andere geht auf eigenen Zweigen an die anderen Bauplätze. Der
+   in LFS, gemeinsame Konfigurations- oder Schemadateien). Alles andere geht auf eigenen Zweigen an die anderen Bauplätze. Der
    Koordinator führt zusammen und vergibt die gemeinsamen Nummern (Muster 5.2 und 9).
 4. **Alle Bauplätze auf derselben Hauptlinie.** Nach jedem Einspielen versorgt der Koordinator alle Bauplätze mit demselben
    Stand (z. B. Push in alle Remotes, danach Pull auf jedem Rechner). Vor jeder Vergabe gleicht er ab, was schon offline
