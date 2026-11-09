@@ -4,7 +4,7 @@
 
 **English** · [Deutsch](README.de.md)
 
-Version 1 · As of 2026-10-21 · Summary of [AI-Coordinator-Pattern.md](en/AI-Coordinator-Pattern.md) (version 4.8) · for sharing
+Version 2 · As of 2026-11-09 · Summary of [AI-Coordinator-Pattern.md](en/AI-Coordinator-Pattern.md) (version 4.9) · for sharing
 
 **What it is about:** One human lets many AI sessions work on one project at the same time. One of them is the
 **coordinator**. It hands out the work, assigns scarce resources, has results checked independently, keeps a log and
@@ -59,7 +59,8 @@ The coordinator does not build things itself. It keeps the overview, sets the or
 5. **Shared files only as a diff with a base checksum.** Central numbers (for example database or protocol versions)
    are assigned by the coordinator only when it integrates the change.
    *Why:* Parallel packages overtake each other. Numbers given out early then break the order.
-6. **Two other models review larger changes.** The building session decides on each finding.
+6. **Another model reviews every diff before it is integrated, two review larger changes.** The building session
+   decides on each finding, followed by exactly one fix round.
    *Why:* In practice, each of the two reviews found errors that the other one missed. Leaving the decision with the
    building session prevents back and forth between the reviewers.
 7. **A different, cheaper quota does the research groundwork. Nobody searches twice.**
@@ -75,7 +76,8 @@ The coordinator does not build things itself. It keeps the overview, sets the or
     So the memory itself is kept under version control.
 
 **Golden rule for several computers:** every computer with its own workbench is a building site of its own, not just a
-test site – spread the integration work across all building sites ([Golden-Rule.md](en/Golden-Rule.md)).
+test site – spread the integration work across all building sites, and with every "done", release the next block
+([Golden-Rule.md](en/Golden-Rule.md)).
 
 ---
 
@@ -118,7 +120,7 @@ memory, log and task records are kept up to date – not through a particularly 
 
 ## More
 
-- **Golden rule:** [Golden-Rule.md](en/Golden-Rule.md) – every computer with its own workbench is a building site.
+- **Golden rule:** [Golden-Rule.md](en/Golden-Rule.md) – every computer with its own workbench is a building site, and "done" releases the next block.
 - **The full pattern:** [AI-Coordinator-Pattern.md](en/AI-Coordinator-Pattern.md) – roles, routines, templates (start prompt, GO message, review and
   research request, bundled decision list), typical mistakes, comparison with cloud offerings.
 - **Origin:** The pattern came about in 2026 in a private project. A perfectly ordinary task session wrote instructions for

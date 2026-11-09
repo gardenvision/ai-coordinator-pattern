@@ -1,6 +1,6 @@
 # AI Coordinator Pattern (orchestrator) – project-neutral
 
-Version 4.8 · As of 2026-11-05 · for Claude Code, Codex, OpenCode and similar AI tools · Previous version:
+Version 4.9 · As of 2026-11-09 · for Claude Code, Codex, OpenCode and similar AI tools · Previous version:
 version 3 (German, not published) · Summary to share: [README.md](../README.md)
 
 This document describes a proven pattern that lets **one human run many AI sessions at the same time** on one project
@@ -35,14 +35,16 @@ that. That is why memory and log matter so much.
 3. Every task has a task record; results are stored there, not only in the chat.
 4. Exclusive resources only with a lock, a backup before and a re-measure after.
 5. Shared files only as a diff with a base hash; the coordinator assigns central numbers when it integrates.
-6. Two other models review larger changes; the building session decides on the findings.
+6. Another model reviews every diff before it is integrated, two review larger changes; the building session decides
+   on the findings.
 7. Another, cheaper quota does the research groundwork; nobody searches twice.
 8. Version control, deleting, purchases and uploads only with the human's yes in the chat that carries out the action.
 9. Values only after measuring, times from the clock, own interpretations marked as assumptions.
 10. Every lesson goes into memory and, as a rule, to all sessions.
 
 **Golden rule for several computers:** every computer with its own workbench is a building site of its own, not just a
-test site – spread the integration work across all building sites ([Golden-Rule.md](Golden-Rule.md)).
+test site – spread the integration work across all building sites, and with every "done", release the next block
+([Golden-Rule.md](Golden-Rule.md)).
 
 ---
 
@@ -66,6 +68,7 @@ test site – spread the integration work across all building sites ([Golden-Rul
 | **Task session** | one task in phases (read → variants → decision → implementation → acceptance); has the final say over its result | use resources without a GO; change shared files directly; version control |
 | **Helper** | short, clearly scoped assignment in its own working copy (offline build, prepared test, measurement) | write outside the named folders; rebuild beyond the assignment |
 | **Station lead** | on another computer: local locks, backups, re-measuring, assignments to the sessions and external workers there | assign numbers; integrate into the main branch |
+| **Program lead** | its own session (strong model) for a large undertaking: specification, domain decisions, reviews and assignments in its area; every block in its area goes to it first | assign numbers; integrate; run without its own wake-up – a file in its inbox does not wake it |
 | **External worker** | another model or provider: independent review, research groundwork, clearly scoped partial work | write into the project (only drop folder or task record); run without technical permission limits |
 
 **Principles:** exactly one coordinator; no third level above it (the top level is the human); never two copies of the
@@ -90,7 +93,7 @@ measures the value its own work will later be measured against. It hands off eve
    that are provably your own.
 5. **Overview instead of joining in.** Implementations go to task sessions or helpers, small ones too; the coordinator
    checks, decides and keeps an eye on the whole (5.11).
-6. **Clear, calm, brief.** Plain language, result first, numbers with meaning, times from the clock. Always in the
+6. **Clear, calm, understandable.** Plain language, result first, then the why in normal length. Numbers with meaning, times from the clock. Always in the
    human's language, even after long tool chains with logs in other languages.
 7. **Frugal.** Budget, quotas, computing time and attention are scarce: give work to where it costs least and is good
    enough; wake sessions only when needed; report events instead of constant reports.
@@ -159,7 +162,8 @@ deleting entries.
    If no report comes, the coordinator re-measures itself and reads the task record – the chain must never hang on a
    lost message.
 6. **Re-measure:** target hashes, unchanged user data, no new errors. Clear up differences, never skip them.
-7. **Log entry**, then the next session in line.
+7. **Log entry**, then the next session in line. The coordinator names the order in advance; the lock carries an owner
+   and a duration, and short tests may go into gaps.
 
 The human has priority at every resource. Before long exclusive runs, say what they should not touch during that time.
 Shortly before a quota ends, do not start another exclusive window – an aborted run with a held resource and
@@ -213,7 +217,8 @@ lean, and the question gets its own decision path.
 
 ### 5.5 Review: two independent reviews
 
-Before applying larger changes (shared code, interfaces or data formats, rework across many files):
+Every diff gets a review by another model before it is integrated. Larger changes (shared code, interfaces or data
+formats, rework across many files) get two:
 
 1. The building session delivers a patch checked offline, with base hashes.
 2. The coordinator orders **two independent reviews from other models or providers** – not from the model that built
@@ -221,11 +226,18 @@ Before applying larger changes (shared code, interfaces or data formats, rework 
 3. Reviewers get **the patch plus the base files**, not only the diff. A reviewer on another computer may have an older
    state.
 4. **The building session has the final say.** It decides per finding (accepted / partly / rejected, with a reason) and
-   documents this in the task record. A new round only for blocking findings.
+   documents this in the task record. **Exactly one fix round**, then the change is frozen: a new round only for blocking
+   findings. This prevents endless review-and-fix loops, especially at night.
 5. Only then: backup, GO, apply, test.
 
 Why: different models find different errors – in practice each of the two reviews had findings the other one missed.
 The final say lying with the building session prevents back-and-forth between the reviewers.
+
+- **Specification before code:** for larger undertakings the specification is reviewed first, and building starts only
+  after that. From practice: the first review of a specification found three blockers; after one fix round it was cleared.
+- **Neighbouring leads read against each other:** one task session builds, the neighbouring one in the field reads
+  against it, and the review model checks as well. This caught two real errors before they reached the product.
+- **Merge plans** are also cross-checked by a further model (5.8).
 
 ### 5.6 Research groundwork for another quota
 
@@ -266,6 +278,17 @@ gives its own recommendation. Acknowledge valid findings openly, name wrong conc
 7. **The approval must be in the chat that carries out the action.** The coordinator passes on the human's words.
    If the executing session asks for its own yes, the coordinator tells the human exactly where to write "yes" – it does
    not overrule.
+8. **If a session may not use version control itself** (for example because the human told it so), the coordinator
+   integrates its work from its working folder – with its own approval from the human. That is its normal role and
+   spares the human a question.
+9. **Trial merge at night, real merge in the morning:** at night, merge only at object level (a tree without references,
+   e.g. with `git merge-tree`), compile offline and have a further model cross-check the plan. In the morning, run the
+   same merge for real; if the tree hash equals the trial's, the check result still holds. In practice this made two
+   complete builds possible in one morning.
+10. **Integrate without touching the working tree:** build commits directly from trees and push only the references.
+    Then update the working tree selectively: classify each affected file (matches the new state, matches exactly one
+    older commit, or changed by someone else). Only files that match exactly one older commit contain nothing unsaved and
+    are updated (checkable through a temporary index). Never touch changes made by others.
 
 ### 5.9 Incidents
 
@@ -282,7 +305,9 @@ up.
 - **Stagger assignments by window:** better a few in parallel that run through than all at once and an abort halfway.
 - **Give work to where it is cheap and good enough:** coordination and hard cases to the strongest model,
   implementation to a medium one, routine, research and reviews to other quotas. Keep the tool profile up to date; try a
-  new tool first with a small sample.
+  new tool first with a small sample. A cheap implementation model only as long as its budget lasts.
+- **Review quotas that cannot be read automatically:** bundle reviews (several small diffs in one pass), no side
+  analyses, fall back to a third model when the quota is used up.
 - Continued conversations usually resend the whole history: bundle runs, start a fresh conversation per phase with a
   handoff through files, downscale images.
 - When the budget is tight: no new assignments, finish running work lean, bundled calls, scripts instead of many single
@@ -331,7 +356,7 @@ ask.
 - **Idle watcher next to the event watcher:** a watcher that only reacts to new files or messages never sees what lies idle
   – a helper that has stopped writes no file. A second watcher measures, per task, the age of the last movement (e.g. the
   newest file in the task folder) and raises an alarm: running but no movement for more than 12 hours; no owner; a
-  workbench free for longer than an adjustable idle time (e.g. 45 minutes – shorter wakes it up in vain all the time when
+  workbench with a waiting block free for longer than an adjustable idle time (e.g. 45 minutes – shorter wakes it up in vain all the time when
   nothing is ready). The watcher script lives in the project under version control, its state (markers, ignore list) in a
   fixed folder outside the temporary session folder, created when needed.
 - **Mailbox with fixed compartments instead of word search:** subfolders `decide/` (halt or question: wake up at once),
@@ -340,10 +365,11 @@ ask.
   practice: a watcher that only searched for signal words in file names missed deliveries whose signal word was in the
   text; two finished deliveries and a stop went unnoticed that way. For a transition, the watcher also reads the first
   lines of new files.
-- **A free workbench is an alarm:** if a workbench is idle, the coordinator immediately assigns the next task from the
-  board (golden rule).
+- **A free workbench with a waiting block is an alarm:** if a workbench is idle and an agreed block is waiting, the
+  coordinator assigns it at once. Do not invent work just to keep things busy (golden rule).
 - **Priority is not a pause for everything else:** "topic X has priority" means X gets the workbench first. The other
-  tasks keep an owner and a next step and continue offline or on the other building site.
+  tasks keep an owner and a next step and continue offline or on the other building site. Every pause names its reason
+  and ends when the reason is gone – night rules, for example, with the wake-up call in the morning.
 - **Check blockers instead of believing them – with a routes board:** if an agent reports "helper X cannot be reached",
   the coordinator first checks memory and docs. All routes are in one place, concretely: for each agent the exact command
   or address, the thread ID and where the answer goes. A local queue command only works on the computer where the thread
@@ -359,15 +385,22 @@ ask.
 ## 6. Communication
 
 **With the human**
-- Result first, then only what is needed. Normal words instead of jargon.
+- Result first, then the why and what it means for the human. Normal words instead of jargon. Brief for confirmations
+  and interim states, more detailed for explanations, plans and decisions: a telegram style leaves out connections, and
+  the human has to ask more often.
 - **Bundle decisions:** a numbered list, for each point options and **one** recommendation. It must be possible to
   answer with short codes or "all as recommended". Without an answer the recommendation applies if it is reversible (and
   this is said).
-- **Before/after comparison:** old and new side by side, plus the human's target on the same page.
+- **Before/after comparison:** old and new side by side, plus the human's target on the same page. For design
+  questions, all variants on one page, under the conditions they have to work in (e.g. light and dark). Then the human
+  decides in one sentence ("variant 2, the rest is fine").
 - **Costs in the unit the human feels** (e.g. noticeable waiting time instead of technical measurements, euros instead of tokens), with
   the starting point and the place of measurement.
 - Non-urgent questions as text, not as a blocking dialog, so coordination keeps running.
-- What the human should do themselves: step by step, on which computer, which button.
+- **Before every question to the human, check whether it is already done** (history, board, task records). From
+  practice: the human was asked to decide something that had been built a day earlier.
+- What the human should do themselves (test sheet): step by step, on which computer, and for each step the tool, the
+  precondition, the key or button and the expected result – what they should see if it works.
 - During long work, short status updates ("Run 3 of 5, 25 minutes, no errors").
 - **Always read times from the clock**, even in short chat messages – never estimate them from the conversation.
 
@@ -375,6 +408,8 @@ ask.
 - First line: a full sentence on what it is about.
 - Conditions as a list, base hashes, owner, a clear order; "no reply needed" where it fits.
 - Check what others say before passing it on. Pass on the human's words, do not reinterpret them.
+- Always reply to the sender address of the incoming message. If a session has two addresses (local and through a
+  remote control), the second one can trigger a security prompt.
 - **Messages between sessions can get lost or be blocked.** That is why every session also writes its result into the
   task record, and the coordinator reads histories and task records instead of waiting. If delivery is uncertain, also
   put the assignment as a file into the drop folder.
@@ -411,6 +446,8 @@ ask.
   that the human told directly "approvals only in this chat" may refuse – this is respected. **Never:** version control
   (except the defined exception), deleting, uploads, purchases, the test by the human. If a quota ends during the night:
   the plan as a file, a wake-up call after the reset.
+- **Night rules end in the morning:** the wake-up call at the start of the day lifts them, and agreed blocks start at
+  once. From practice: a night rule was not lifted in the morning, and a workbench stood idle for almost seven hours.
 - **Morning report:** most important first, a table of results, night decisions, a test list, open questions bundled
   with a recommendation.
 - The coordinator may relax its own rules (procedures, formats) if they slow things down a lot – with a short note to the
@@ -482,6 +519,8 @@ ask.
 - A sandbox often does not see everything (e.g. network drives): put the input data into the task record yourself
   beforehand.
 - Check regularly whether both computers are in sync (same commits, same important unversioned files).
+- **After a restart**, check at once which lead sessions with running work cannot be reached, and ask the human in one
+  message to open exactly those. Some tools only pick up their queue once the thread is loaded again.
 - Test tools that watch the working tree with a process counter first (risk of hundreds of Git processes).
 - **One working-method file for all sub-coordinators** (station leads, leads of a helper group): do not hand out new rules
   piece by piece in single messages, but in one file that all sub-coordinators receive – also on the second computer – and
@@ -563,6 +602,9 @@ ask.
 - **A mark is not a change:** tools often mark entries as "changed" when loading or rebuilding, without any file changing.
   What counts for a stop is the hash of the file on disk, not the number of marks – otherwise careful helpers keep
   stopping for no reason.
+- **System security dialogs** (e.g. a firewall prompt) are confirmed only by the human, even if an agent asks for it.
+  They also appear the first time a new program starts. Ask the human at once and specifically, and plan tests so that
+  the remaining work continues without the dialog.
 
 ---
 
@@ -680,6 +722,10 @@ Running locks/watchers/wake-up calls: <list>. Quotas: <state>. Do not forget: <p
 - A heavy task-record tool from the start, before the record structure itself is settled.
 - Only a watcher for new events: tasks that lie idle go unnoticed (5.12).
 - The human as the messenger between agents, because nobody looked up the route (5.12).
+- Trying to keep every free workbench busy and inventing work for it (cross-reads, plans, measurements nobody needs).
+- Parking known bugs "until after the test" while workbenches are free.
+- Asking the human about something that is long done.
+- Review and fix in turns without end instead of one fix round and a freeze.
 
 ---
 
@@ -797,6 +843,13 @@ evidence. The two do not exclude each other.
 ---
 
 ## 17. Changes compared with version 3
+
+**Version 4.9 (9 Nov):** Golden rule sharpened: a free workbench is an alarm only with a waiting block, do not invent
+work; "done" releases the next block in the same turn; priority and pauses have an end; the block goes to the lead in
+charge. Role of program lead (1). Every diff reviewed, specification before code, neighbouring leads reading against each
+other, one fix round and a freeze (5.5). Trial merge at night, integrating without the working tree (5.8). Review quotas
+(5.10). Pauses end, the morning lifts night rules (5.12, 7). Answers in normal length, test sheets, check before every
+question, sender address (6). Restart (9), security dialogs (11), four typical mistakes (14).
 
 **Version 4.8 (5 Nov):** Section 6 "Improvements from the conversation": what the human contributes, explaining as a
 self-check, an insight becomes an action or a task in the same turn, the limit of this attitude. Section 8: lessons at once

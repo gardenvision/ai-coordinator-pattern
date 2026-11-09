@@ -4,7 +4,7 @@
 
 [English](README.md) · **Deutsch**
 
-Fassung 1 · Stand 2026-10-21 · Kurzfassung zu [KI-Koordinator-Muster.md](de/KI-Koordinator-Muster.md) (Fassung 4.8) · zum Weitergeben
+Fassung 2 · Stand 2026-11-09 · Kurzfassung zu [KI-Koordinator-Muster.md](de/KI-Koordinator-Muster.md) (Fassung 4.9) · zum Weitergeben
 
 **Worum es geht:** Ein Mensch lässt viele KI-Sessions gleichzeitig an einem Projekt arbeiten. Eine davon ist der
 **Koordinator**. Sie verteilt die Arbeit, vergibt knappe Ressourcen, lässt Ergebnisse unabhängig prüfen, führt Protokoll
@@ -57,7 +57,8 @@ Der Koordinator setzt selbst nichts um. Er hält den Überblick, vergibt Reihenf
 5. **Geteilte Dateien nur als Diff mit Basis-Prüfsumme.** Zentrale Nummern (z. B. Datenbank- oder Protokollversionen)
    vergibt der Koordinator erst beim Einspielen.
    *Warum:* Parallele Pakete überholen sich. Früh vergebene Nummern brechen dann die Reihenfolge.
-6. **Größere Änderungen prüfen zwei andere Modelle.** Die bauende Session entscheidet je Befund.
+6. **Jeden Diff prüft vor dem Einspielen ein anderes Modell, größere Änderungen zwei.** Die bauende Session entscheidet je
+   Befund, danach gibt es genau eine Fix-Runde.
    *Warum:* In der Praxis fand jedes der beiden Reviews Fehler, die dem anderen fehlten. Die Entscheidung bei der bauenden
    Session verhindert ein Hin und Her zwischen den Prüfern.
 7. **Recherchen macht ein anderes, günstigeres Kontingent vor. Niemand sucht doppelt.**
@@ -72,7 +73,8 @@ Der Koordinator setzt selbst nichts um. Er hält den Überblick, vergibt Reihenf
     Das Gedächtnis wird darum selbst versioniert.
 
 **Goldene Regel bei mehreren Rechnern:** Jeder Rechner mit eigener Werkbank ist ein eigener Bauplatz, nicht nur ein
-Prüfplatz – verteile die Einbauten auf alle Bauplätze ([Goldene-Regel.md](de/Goldene-Regel.md)).
+Prüfplatz – verteile die Einbauten auf alle Bauplätze, und gib mit jedem „fertig“ den nächsten Block frei
+([Goldene-Regel.md](de/Goldene-Regel.md)).
 
 ---
 
@@ -116,7 +118,7 @@ Gedächtnis, Protokoll und Akten gepflegt werden – nicht durch ein besonders l
 
 ## Mehr dazu
 
-- **Goldene Regel:** [Goldene-Regel.md](de/Goldene-Regel.md) – jeder Rechner mit eigener Werkbank ist ein Bauplatz.
+- **Goldene Regel:** [Goldene-Regel.md](de/Goldene-Regel.md) – jeder Rechner mit eigener Werkbank ist ein Bauplatz, und „fertig“ gibt den nächsten Block frei.
 - **Das ganze Muster:** [KI-Koordinator-Muster.md](de/KI-Koordinator-Muster.md) – Rollen, Routinen, Vorlagen (Start-Prompt, GO-Nachricht,
   Review- und Recherche-Auftrag, gebündelte Entscheidungsliste), typische Fehler, Vergleich mit Cloud-Angeboten.
 - **Herkunft:** Das Muster ist 2026 in einem privaten Projekt entstanden. Eine ganz normale Fach-Session schrieb dort

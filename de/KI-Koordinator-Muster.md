@@ -1,6 +1,6 @@
 # KI-Koordinator-Muster (Orchestrator) – projektneutral
 
-Fassung 4.8 · Stand 2026-11-05 · für Claude Code, Codex, OpenCode und vergleichbare KI-Werkzeuge · Vorgänger:
+Fassung 4.9 · Stand 2026-11-09 · für Claude Code, Codex, OpenCode und vergleichbare KI-Werkzeuge · Vorgänger:
 Fassung 3 (nicht veröffentlicht) · Kurzfassung zum Weitergeben: [README.de.md](../README.de.md)
 
 Dieses Dokument beschreibt ein erprobtes Muster, mit dem **ein Mensch viele KI-Sessions gleichzeitig** an einem Projekt
@@ -36,14 +36,16 @@ hinaus gibt es nicht. Darum sind Gedächtnis und Protokoll so wichtig.
 3. Jede Aufgabe hat eine Akte; Ergebnisse stehen dort, nicht nur im Chat.
 4. Exklusive Ressourcen nur mit Sperre, Sicherung vorher und Nachmessen hinterher.
 5. Geteilte Dateien nur als Diff mit Basis-Hash; zentrale Nummern vergibt der Koordinator beim Einspielen.
-6. Größere Änderungen prüfen zwei andere Modelle; die bauende Session entscheidet über die Befunde.
+6. Jeden Diff prüft vor dem Einspielen ein anderes Modell, größere Änderungen zwei; die bauende Session entscheidet über
+   die Befunde.
 7. Recherchen macht ein anderes, günstigeres Kontingent vor; niemand sucht doppelt.
 8. Versionsverwaltung, Löschen, Käufe und Uploads nur mit Ja des Menschen im ausführenden Chat.
 9. Werte erst nach Messung, Uhrzeiten von der Uhr, eigene Deutungen als Annahme.
 10. Jede Lehre geht ins Gedächtnis und als Regel an alle Sessions.
 
 **Goldene Regel bei mehreren Rechnern:** Jeder Rechner mit eigener Werkbank ist ein eigener Bauplatz, nicht nur ein
-Prüfplatz – verteile die Einbauten auf alle Bauplätze ([Goldene-Regel.md](Goldene-Regel.md)).
+Prüfplatz – verteile die Einbauten auf alle Bauplätze, und gib mit jedem „fertig“ den nächsten Block frei
+([Goldene-Regel.md](Goldene-Regel.md)).
 
 ---
 
@@ -67,6 +69,7 @@ Prüfplatz – verteile die Einbauten auf alle Bauplätze ([Goldene-Regel.md](Go
 | **Fach-Session** | eine Aufgabe in Phasen (lesen → Varianten → Entscheidung → Umsetzung → Abnahme); hat die Hoheit über ihr Ergebnis | Ressourcen ohne GO nutzen; geteilte Dateien direkt ändern; Versionsverwaltung |
 | **Helfer** | kurzer, klar umrissener Auftrag in eigener Arbeitskopie (Offline-Bau, vorbereiteter Test, Messung) | außerhalb der benannten Ordner schreiben; über den Auftrag hinaus umbauen |
 | **Stationsleiter** | auf einem weiteren Rechner: lokale Sperren, Sicherungen, Nachmessen, Aufträge an dortige Sessions und Zuarbeiter | Nummern vergeben; in den Hauptzweig einspielen |
+| **Programm-Leitung** | eigene Session (starkes Modell) für ein großes Vorhaben: Spezifikation, Fachentscheidungen, Reviews und Aufträge in ihrem Bereich; jeder Block ihres Bereichs geht zuerst an sie | Nummern vergeben; einspielen; ohne eigenen Wecker laufen – eine abgelegte Datei weckt sie nicht |
 | **Zuarbeiter** | anderes Modell oder anderer Anbieter: unabhängiges Review, Recherche-Vorarbeit, klar umrissene Teilarbeit | ins Projekt schreiben (nur Ablage oder Akte); ohne technische Rechte-Grenzen laufen |
 
 **Grundsätze:** genau ein Koordinator; keine dritte Ebene über ihm (die oberste Ebene ist der Mensch); nie zwei Kopien
@@ -91,7 +94,7 @@ Wert misst, an dem später ihre eigene Arbeit gemessen wird. Alles andere gibt e
    Prozesse beenden, die nachweislich die eigenen sind.
 5. **Überblick statt Mitmachen.** Umsetzungen gehen an Fach-Sessions oder Helfer, auch kleine; der Koordinator prüft,
    entscheidet und behält das Ganze im Blick (5.11).
-6. **Klar, ruhig, knapp.** Einfache Sprache, zuerst das Ergebnis, Zahlen mit Bedeutung, Uhrzeiten von der Uhr. Immer in der
+6. **Klar, ruhig, verständlich.** Einfache Sprache, zuerst das Ergebnis, dann in normaler Länge das Warum. Zahlen mit Bedeutung, Uhrzeiten von der Uhr. Immer in der
    Sprache des Menschen, auch nach langen Werkzeugketten mit fremdsprachigen Logs.
 7. **Sparsam.** Budget, Kontingente, Rechenzeit und Aufmerksamkeit sind knapp: Arbeit dorthin geben, wo sie am wenigsten
    kostet und gut genug wird; Sessions nur wecken, wenn nötig; Ereignisse melden statt Dauerberichte.
@@ -159,7 +162,8 @@ statt Einträge zu löschen.
    Kommt kein Bericht, misst der Koordinator selbst nach und liest in der Akte nach – die Kette darf nie an einer
    verlorenen Nachricht hängen.
 6. **Nachmessen:** Ziel-Hashes, unveränderte Nutzerdaten, keine neuen Fehler. Abweichungen klären, nie übergehen.
-7. **Protokolleintrag**, dann die nächste Session in der Reihe.
+7. **Protokolleintrag**, dann die nächste Session in der Reihe. Die Reihenfolge nennt der Koordinator vorab; die Sperre
+   trägt Besitzer und Dauer, kurze Tests dürfen in Lücken.
 
 Der Mensch hat Vorrang an jeder Ressource. Vor langen exklusiven Läufen sagen, was er in der Zeit nicht anfassen soll.
 Kurz vor dem Ende eines Kontingents kein exklusives Fenster mehr starten – ein abgebrochener Lauf mit belegter Ressource
@@ -212,7 +216,8 @@ bekommt einen eigenen Entscheidungsweg.
 
 ### 5.5 Zweitprüfung: zwei unabhängige Reviews
 
-Vor dem Einbau größerer Änderungen (geteilter Code, Schnittstellen oder Datenformate, Umbau über viele Dateien):
+Jeder Diff bekommt vor dem Einspielen ein Review eines anderen Modells. Größere Änderungen (geteilter Code, Schnittstellen
+oder Datenformate, Umbau über viele Dateien) bekommen zwei:
 
 1. Die bauende Session liefert einen offline geprüften Patch mit Basis-Hashes.
 2. Der Koordinator bestellt **zwei unabhängige Reviews bei anderen Modellen oder Anbietern** – nicht bei dem Modell, das
@@ -220,11 +225,18 @@ Vor dem Einbau größerer Änderungen (geteilter Code, Schnittstellen oder Daten
 3. Reviewer bekommen **Patch plus Basisdateien**, nicht nur den Diff. Ein Reviewer auf einem anderen Rechner hat womöglich
    einen älteren Stand.
 4. **Die bauende Session hat die Hoheit.** Sie entscheidet je Befund (übernommen / teilweise / abgelehnt, mit Grund) und
-   dokumentiert das in der Akte. Eine neue Runde nur bei blockierenden Befunden.
+   dokumentiert das in der Akte. **Genau eine Fix-Runde**, danach wird eingefroren: Eine neue Runde gibt es nur noch für
+   blockierende Befunde. Das verhindert endlose Review-Fix-Schleifen, besonders nachts.
 5. Erst danach: Sicherung, GO, Einbau, Test.
 
 Warum: Verschiedene Modelle finden verschiedene Fehler – in der Praxis hatte jedes der beiden Reviews Befunde, die dem
 anderen fehlten. Die Hoheit bei der bauenden Session verhindert ein Hin und Her zwischen den Reviewern.
+
+- **Spezifikation vor Code:** Bei größeren Vorhaben wird zuerst die Spezifikation geprüft, gebaut wird erst danach. Aus der
+  Praxis: Die erste Prüfung einer Spezifikation fand drei Blocker; nach einer Fix-Runde war sie frei.
+- **Benachbarte Leitungen lesen gegen:** Eine Fach-Session baut, die fachlich benachbarte liest gegen, und das Review-Modell
+  prüft dazu. So fielen zwei echte Fehler auf, bevor sie ins Produkt kamen.
+- **Pläne zum Zusammenführen** prüft zusätzlich ein weiteres Modell gegen (5.8).
 
 ### 5.6 Recherche-Vorarbeit an ein anderes Kontingent
 
@@ -263,6 +275,17 @@ Empfehlung. Berechtigte Funde offen anerkennen, falsche Schlüsse benennen.
 7. **Die Freigabe muss in dem Chat stehen, der die Aktion ausführt.** Der Koordinator gibt den Wortlaut des Menschen weiter.
    Verlangt die ausführende Session ein eigenes Ja, sagt er dem Menschen genau, wo er „ja“ schreiben muss – er überstimmt
    nicht.
+8. **Darf eine Session selbst keine Versionsverwaltung** (etwa weil der Mensch es ihr so gesagt hat), spielt der Koordinator
+   ihre Arbeit aus ihrem Arbeitsordner ein – mit seiner eigenen Freigabe des Menschen. Das ist seine normale Rolle und
+   erspart dem Menschen eine Rückfrage.
+9. **Probe-Merge nachts, echter Merge morgens:** Nachts wird nur auf Objektebene zusammengeführt (ein Baum ohne Referenzen,
+   z. B. mit `git merge-tree`), offline kompiliert und der Plan von einem weiteren Modell gegengeprüft. Morgens folgt
+   derselbe Merge echt; ist der Baum-Hash gleich dem der Probe, gilt das Prüfergebnis weiter. In der Praxis wurden so zwei
+   vollständige Builds an einem Vormittag fertig.
+10. **Einspielen, ohne den Arbeitsbaum anzufassen:** Commits direkt aus Bäumen bauen und nur die Referenzen pushen. Danach
+    den Arbeitsbaum gezielt nachziehen: Jede betroffene Datei wird eingeordnet (entspricht dem neuen Stand, entspricht genau
+    einem älteren Commit oder ist fremd geändert). Nur Dateien, die genau einem älteren Commit entsprechen, enthalten nichts
+    Ungesichertes und werden aktualisiert (prüfbar über einen temporären Index). Fremde Änderungen nie anfassen.
 
 ### 5.9 Störfälle
 
@@ -278,7 +301,9 @@ verwerfen. Bei Vorfällen durch Agenten festhalten: wer, welcher Befehl, was get
 - **Aufträge nach Fenster staffeln:** lieber wenige parallel und dafür durchgehend als alle zugleich und mittendrin Abbruch.
 - **Arbeit dorthin geben, wo sie günstig und gut genug ist:** Koordination und schwierige Fälle beim stärksten Modell,
   Umsetzung mittel, Routine, Recherche und Reviews an andere Kontingente. Steckbrief pflegen; ein neues Werkzeug zuerst mit
-  einer kleinen Probe.
+  einer kleinen Probe. Ein günstiges Umsetzungsmodell nur, solange sein Budget reicht.
+- **Review-Kontingente, die sich nicht ablesen lassen:** Reviews bündeln (mehrere kleine Diffs in einem Durchgang), keine
+  Nebenanalysen, bei erschöpftem Kontingent auf ein drittes Modell ausweichen.
 - Fortgesetzte Gespräche schicken meist den ganzen Verlauf erneut: Läufe bündeln, je Phase ein frisches Gespräch mit
   Übergabe über Dateien, Bilder verkleinern.
 - Bei knappem Budget: keine neuen Aufträge, laufende Arbeiten schlank beenden, gebündelte Aufrufe, Skripte statt vieler
@@ -328,7 +353,7 @@ das erst, wenn er nachfragt.
 - **Stillstand-Wächter neben dem Ereignis-Wächter:** Ein Wächter, der nur auf neue Dateien oder Nachrichten reagiert, sieht nie,
   was still liegt – ein stehender Helfer schreibt keine Datei. Ein zweiter Wächter misst je Aufgabe das Alter der letzten
   Bewegung (z. B. die neueste Datei im Aufgabenordner) und meldet: läuft, aber länger als 12 Stunden ohne Bewegung; ohne
-  Besitzer; eine Werkbank länger frei als eine einstellbare Leerlaufzeit (z. B. 45 Minuten – kürzer weckt ständig umsonst,
+  Besitzer; eine Werkbank mit wartendem Block länger frei als eine einstellbare Leerlaufzeit (z. B. 45 Minuten – kürzer weckt ständig umsonst,
   wenn gerade nichts bereit ist). Das Wächterskript liegt versioniert im Projekt, sein Zustand (Marker, Ignorierliste) in
   einem festen Ordner außerhalb des temporären Sitzungsordners, der bei Bedarf angelegt wird.
 - **Briefkasten mit festen Fächern statt Wortsuche:** Unterordner `entscheid/` (Halt oder Frage: sofort wecken), `bereit/`
@@ -336,10 +361,11 @@ das erst, wenn er nachfragt.
   Fester Kopf: Zeile 1 ein klarer Satz, Zeile 2 „Typ | Aufgabe | Antwort nötig“. Keine Quittungen für Quittungen. Aus der
   Praxis: Ein Wächter, der nur Signalwörter im Dateinamen suchte, übersah Abgaben, deren Signalwort im Text stand; zwei
   fertige Abgaben und ein Stopp lagen so unbemerkt. Übergangsweise liest der Wächter auch die ersten Zeilen neuer Dateien.
-- **Eine freie Werkbank ist ein Alarm:** Steht eine Werkbank leer, vergibt der Koordinator sofort die nächste Aufgabe von der
-  Tafel (Goldene Regel).
+- **Freie Werkbank und wartender Block sind ein Alarm:** Steht eine Werkbank leer und wartet ein vereinbarter Block, vergibt der
+  Koordinator ihn sofort. Keine Arbeit erfinden, nur um auszulasten (Goldene Regel).
 - **Vorrang ist keine Pause für alles andere:** „Thema X hat Vorrang“ heißt: X bekommt zuerst die Werkbank. Die anderen Aufgaben
-  behalten einen Besitzer und einen nächsten Schritt und laufen offline oder auf dem anderen Bauplatz weiter.
+  behalten einen Besitzer und einen nächsten Schritt und laufen offline oder auf dem anderen Bauplatz weiter. Jede Pause nennt
+  ihren Grund und endet, wenn er wegfällt – Nachtregeln zum Beispiel mit dem Wecker am Morgen.
 - **Blocker prüfen statt glauben – mit einer Wegetafel:** Meldet ein Agent „Helfer X ist nicht erreichbar“, prüft der
   Koordinator zuerst Gedächtnis und Doku. Alle Wege stehen an einer Stelle, konkret: für jeden Agenten der genaue Befehl bzw.
   die Adresse, die Thread-Kennung und wohin die Antwort kommt. Ein lokaler Warteschlangen-Befehl wirkt nur auf dem Rechner,
@@ -355,14 +381,21 @@ das erst, wenn er nachfragt.
 ## 6. Kommunikation
 
 **Mit dem Menschen**
-- Zuerst das Ergebnis, dann das Nötigste. Normale Wörter statt Fachjargon.
+- Zuerst das Ergebnis, dann das Warum und was es für den Menschen heißt. Normale Wörter statt Fachjargon. Knapp bei
+  Bestätigungen und Zwischenständen, ausführlicher bei Erklärungen, Plänen und Entscheidungen: Ein Telegrammstil lässt
+  Zusammenhänge weg, und der Mensch muss öfter nachfragen.
 - **Entscheidungen bündeln:** nummerierte Liste, je Punkt Optionen und **eine** Empfehlung. Antwort mit Kürzeln oder
   „alles nach Empfehlung“ muss möglich sein. Ohne Antwort gilt die Empfehlung, wenn sie umkehrbar ist (und das wird dazugesagt).
-- **Vergleich vorher/nachher:** alt und neu nebeneinander, dazu die Vorgabe des Menschen auf derselben Seite.
+- **Vergleich vorher/nachher:** alt und neu nebeneinander, dazu die Vorgabe des Menschen auf derselben Seite. Bei
+  Gestaltungsfragen alle Varianten auf einer Seite, unter den Bedingungen, unter denen sie wirken müssen (z. B. hell und
+  dunkel). Dann entscheidet der Mensch in einem Satz („Variante 2, Rest passt“).
 - **Kosten in der Einheit, die der Mensch spürt** (z. B. spürbare Wartezeit statt technischer Messwerte, Euro statt Token), mit
   Ausgangslage und Messort.
 - Nicht dringende Fragen als Text, nicht als blockierender Dialog, damit die Koordination weiterläuft.
-- Was der Mensch selbst tun soll: Schritt für Schritt, auf welchem Rechner, welcher Knopf.
+- **Vor jeder Frage an den Menschen nachsehen, ob es schon erledigt ist** (Historie, Tafel, Akten). Aus der Praxis: Der
+  Mensch sollte etwas entscheiden, das seit einem Tag gebaut war.
+- Was der Mensch selbst tun soll (Testzettel): Schritt für Schritt, auf welchem Rechner, und je Schritt Werkzeug,
+  Vorbedingung, Taste bzw. Knopf und das erwartete Ergebnis – was er sehen soll, wenn es stimmt.
 - Bei langen Arbeiten kurze Zwischenstände („Lauf 3 von 5, 25 Minuten, keine Fehler“).
 - **Uhrzeiten immer von der Uhr ablesen**, auch in kurzen Chat-Meldungen – nie aus dem Gesprächsverlauf schätzen.
 
@@ -370,6 +403,8 @@ das erst, wenn er nachfragt.
 - Erste Zeile ein vollständiger Satz, worum es geht.
 - Bedingungen als Liste, Basis-Hashes, Besitzer, klare Reihenfolge; „keine Antwort nötig“, wo es passt.
 - Fremde Aussagen nachprüfen, bevor sie weitergegeben werden. Den Wortlaut des Menschen weitergeben, nicht umdeuten.
+- Antworten immer an die Absenderadresse der eingehenden Nachricht. Hat eine Session zwei Adressen (lokal und über eine
+  Fernsteuerung), kann die zweite eine Sicherheitsrückfrage auslösen.
 - **Nachrichten zwischen Sessions können verloren gehen oder blockiert sein.** Darum schreibt jede Session ihr Ergebnis
   auch in die Akte, und der Koordinator liest Verläufe und Akten nach, statt zu warten. Bei unsicherer Zustellung den
   Auftrag zusätzlich als Datei auf die Ablage legen.
@@ -406,6 +441,8 @@ das erst, wenn er nachfragt.
   denen der Mensch selbst gesagt hat „Freigaben nur in diesem Chat“, dürfen ablehnen – das wird respektiert. **Nie:**
   Versionsverwaltung (außer der festgelegten Ausnahme), Löschen, Uploads, Käufe, der Test durch den Menschen. Endet ein
   Kontingent in der Nacht: Plan als Datei, Wecker nach dem Reset.
+- **Morgens enden die Nachtregeln:** Der Wecker zum Tagesbeginn hebt sie auf, und vereinbarte Blöcke starten sofort. Aus der
+  Praxis: Eine Nachtregel wurde morgens nicht aufgehoben, und eine Werkbank stand fast sieben Stunden frei.
 - **Morgenbericht:** Wichtigstes zuerst, Tabelle der Ergebnisse, Nachtentscheide, Testliste, offene Fragen gebündelt mit
   Empfehlung.
 - Eigene Regeln (Abläufe, Formate) darf der Koordinator lockern, wenn sie stark bremsen – mit kurzer Rückmeldung an den
@@ -476,6 +513,9 @@ das erst, wenn er nachfragt.
   Projekts nachsehen (selbst installierte Pakete) und den Prüfumfang im Bericht nennen.
 - Eine Sandbox sieht oft nicht alles (z. B. Netzlaufwerke): Eingangsdaten vorher selbst in die Akte legen.
 - Regelmäßig prüfen, ob beide Rechner synchron sind (gleiche Commits, gleiche wichtige nicht versionierte Dateien).
+- **Nach einem Neustart** sofort prüfen, welche Leitungs-Sessions mit laufender Arbeit nicht erreichbar sind, und den
+  Menschen in einer Nachricht bitten, genau diese zu öffnen. Manche Werkzeuge holen ihre Warteschlange erst ab, wenn der
+  Thread wieder geladen ist.
 - Werkzeuge, die den Arbeitsbaum beobachten, vorher mit einem Prozesszähler testen (Gefahr von Hunderten Git-Prozessen).
 - **Eine Arbeitsweise-Datei für alle Teilkoordinatoren** (Stationsleiter, Führer einer Helfer-Gruppe): neue Regeln nicht
   stückweise in einzelnen Nachrichten verteilen, sondern in einer Datei, die alle Teilkoordinatoren erhalten – auch auf dem
@@ -552,6 +592,9 @@ das erst, wenn er nachfragt.
 - **Markierung ist nicht Änderung:** Werkzeuge markieren beim Laden oder Neubauen oft Einträge als „geändert“, ohne dass sich
   eine Datei ändert. Maßgeblich für einen Stopp ist der Hash der Datei auf der Platte, nicht die Zahl der Markierungen –
   sonst halten vorsichtige Helfer immer wieder grundlos an.
+- **Sicherheitsdialoge des Systems** (z. B. eine Firewall-Abfrage) bestätigt nur der Mensch, auch wenn ein Agent darum bittet.
+  Sie kommen auch beim ersten Start eines neuen Programms. Den Menschen sofort und gezielt bitten und Tests so planen, dass
+  die übrige Arbeit ohne den Dialog weiterläuft.
 
 ---
 
@@ -669,6 +712,10 @@ Laufende Sperren/Wächter/Wecker: <Liste>. Kontingente: <Stand>. Nicht vergessen
 - Ein schweres Akten-Werkzeug von Anfang an, bevor die Aktenstruktur selbst sitzt.
 - Nur ein Wächter für neue Ereignisse: Aufgaben, die still liegen, fallen niemandem auf (5.12).
 - Der Mensch als Briefträger zwischen Agenten, weil niemand den Weg nachgesehen hat (5.12).
+- Jede freie Werkbank auslasten wollen und dafür Arbeit erfinden (Gegenlesungen, Pläne, Messungen ohne Bedarf).
+- Bekannte Fehler „bis nach dem Test“ parken, während Werkbänke frei sind.
+- Den Menschen etwas fragen, das längst erledigt ist.
+- Review und Fix im Wechsel ohne Ende statt einer Fix-Runde und Einfrieren.
 
 ---
 
@@ -786,6 +833,13 @@ strengen Freigaben mit Nachweisen. Beides schließt sich nicht aus.
 ---
 
 ## 17. Änderungen gegenüber Fassung 3
+
+**Fassung 4.9 (09.11.):** Goldene Regel geschärft: Eine freie Werkbank ist nur mit wartendem Block ein Alarm, keine Arbeit
+erfinden; „fertig“ gibt im selben Zug den nächsten Block frei; Vorrang und Pausen haben ein Ende; der Block geht an die
+zuständige Leitung. Rolle Programm-Leitung (1). Jeder Diff mit Review, Spezifikation vor Code, Gegenlesen benachbarter
+Leitungen, eine Fix-Runde und Einfrieren (5.5). Probe-Merge nachts, Einspielen ohne den Arbeitsbaum (5.8). Review-Kontingente
+(5.10). Pausen enden, der Morgen hebt Nachtregeln auf (5.12, 7). Antworten in normaler Länge, Testzettel, vor jeder Frage
+nachsehen, Absenderadresse (6). Neustart (9), Sicherheitsdialoge (11), vier typische Fehler (14).
 
 **Fassung 4.8 (05.11.):** Abschnitt 6 „Verbesserung aus dem Gespräch“: was der Mensch beiträgt, Erklären als Selbstprüfung,
 eine Einsicht wird im selben Zug Handlung oder Aufgabe, Grenze dieser Haltung. Abschnitt 8: Lehren sofort und mit Begründung,
